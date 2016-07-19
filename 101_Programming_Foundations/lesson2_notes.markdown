@@ -7,7 +7,7 @@ We need to formazlie the pseudo-code a little bit using some keywords to help us
 Keywords we can use are:
 
 | keyword             | meaning                              |
-| --                  | --                                   |
+| ---                 | ---                                  |
 | START               | start of the program                 |
 | SET                 | sets a variable we can use for later |
 | GET                 | retrieve input from user             |
