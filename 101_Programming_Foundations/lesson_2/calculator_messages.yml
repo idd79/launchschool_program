@@ -1,0 +1,20 @@
+# calculator_messages.yml
+
+sel_language: "Selectect your language.\n
+              'en' for english or 'es' for spanish\n
+              Seleccione su idioma.\n
+              'en' para ingles o 'es' para español"
+
+welcome: "Welcome to Calculator! - Bienvenido a la Calculadora!"
+
+en:
+  name: "Plese enter your name:"
+  valid_name: "Make sure to enter a valid name."
+  first_number: "What's the first number?"
+  second_number: "What's the second number?"
+
+es:
+  name: "Por favor entre su nombre:"
+  valid_name: "Asegurese de entrar un nombre valido"
+  first_number: "Cual es el primer numero"
+  second_number: "Cual es el segundo numero"

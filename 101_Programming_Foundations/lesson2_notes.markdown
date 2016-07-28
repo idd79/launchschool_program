@@ -2,7 +2,8 @@
 
 ## Formal Pseudo-Code
 
-We need to formazlie the pseudo-code a little bit using some keywords to help us break down the logic of the program into concrete commands and later makes translating to program code much easier.
+We need to formalize the pseudo-code a little bit using some keywords to help us break down the logic of the program into concrete commands and later makes translating to program code much easier.
+
 
 Keywords we can use are:
 
@@ -61,7 +62,7 @@ def find_greatest(numbers)
 
   saved_number
 end
-```
+``` 
 
 - Look at the conditional assignment operator `||=` which will assign a value to a variable only if that variable is empty, otherwise it will not assign a new value. It is useful in this case to assign the first value to `saved_number`.
 
@@ -105,4 +106,107 @@ Style/StringLiterals:
 
 ## Debugging
 
+You might want to follow these steps to debugging:
+
+1. Reproduce the error
+1. Determine the boundaries of the error
+1. Trace the code
+1. Understand the problem well
+1. Implement a fix
+1. Test the fix
+
+
+## Techniques for debugging
+
+1. Line by line
+1. Rubber Duck
+1. Walking away
+1. Using pry: require pry (`require "pry"`) insert a `binding.pry` anywhere in your code. To continues the execution of your program type `Ctrl+D`.
+1. Using a debugger: pry can also be used as a real debugger. We will cover this later, for now use pry in the above mentioned way.
+
+
+## Calculator Bonus Features
+
+- For better integer validation:
+    - `input.to_i.to_s == input`
+    - Use regex, e.g.: `input =~ /[0-9]/`, or `/^\d+$/.match(input)`
+    - Use embedded function: `Integer(input) rescue false`. Be careful with the use of `rescue` as it is consider as "code smell" given that it might suppress errors that might affect other parts of the code as well.
+
+- For float validation:
+    - `input.to_f.to_s == input`
+    - Use regex, e.g.: `/\d/.match(input) && /^\d*\.?\d*$/.match(input)`.
+    - Use embedded function: `Float(input) rescue false`.
+
+- Extracting messages in the program to a configuration file:
+    - Use `yaml` format to extract the messages into a configuration file. Example:
+
+    ```ruby
+    # calculator_messages.yml
+
+    welcome: "Welcome to Calculator! Enter your name:"
+    valid_name: "Make sure to end a valid name."
+
+    # ... rest of file omitted for brevity
+    ```
+    
+    - Then we can call each message in the following way:
+
+    ```ruby
+    # at the top of calculator.rb
+
+    require 'yaml'
+    MESSAGES = YAML.load_file('calculator_messages.yml')
+
+    # replace this:
+    prompt("Welcome to Calculator! Enter your name:")
+
+    # with this:
+    prompt(MESSAGES['welcome'])
+    ```
+    
+    - Notice that `MESSAGES` is a normal Ruby hash, so we just use the hash methods to call each message.
+
+- Messages in different languages:
+
+    - Modify the `yaml` file:
+
+    ```ruby
+    # reorganizing the calculator_messages.yml
+
+    en:
+      welcome: "Welcome to Calculator! Enter your name:"
+      valid_name: "Make sure to enter a valid name."
+    es:
+      welcome: "Bienvenido a la calculadora! Entre su nombre:"
+      valid_name: "Asegúrese de entrar un nombre válido."
+    ```
+
+    - Then in our code use:
+
+    ```ruby
+    # top of calculator.rb
+
+    LANGUAGE = 'en'
+
+    def messages(message, lang='en')
+      MESSAGES[lang][message]
+    end
+
+    # whenever you call the prompt, you can do this:
+
+    prompt(messages('welcome', LANGUAGE))
+
+    # or if you think that's too verbose, you can do this:
+
+    def prompt(key)
+      message = messages(key, LANGUAGE)   # make sure the "messages" method is declared above this line
+      Kernel.puts("=> #{message}")
+     end
+
+    # now you can just do:
+    prompt('welcome')
+    ```
+    
+    
+    
 
