@@ -10,8 +10,10 @@ def prompt_print(message, style = '-->')
   print "#{style} #{message}"
 end
 
-def number?(input)
-  /\d/.match(input) && /^\d*\.?\d*$/.match(input)
+def float?(input)
+  # /\d/.match(input) && /^\d*\.?\d*$/.match(input)
+  # Use this instead:
+  /^\d*\.?\d+$/.match(input)
 end
 
 def integer?(input)
@@ -41,19 +43,26 @@ loop do
       prompt_print('Enter the loan amount: ')
       ans = gets.chomp
 
-      if number?(ans)
+      if float?(ans)
         loan_amount = ans.to_f
         break
       else
         prompt_puts('Please enter a valid number...')
       end
+
+      # Other way to write this using a guard clause is:
+      # prompt_print('Enter the loan amount: ')
+      # ans = gets.chomp
+      # loan_amount = ans.to_f
+      # break if number?(ans)
+      # prompt_puts('Please enter a valid number...')
     end
 
     loop do
       prompt_print('Enter the APR (e.g., if 5.3%, enter 5.3): ')
       ans = gets.chomp
 
-      if number?(ans)
+      if float?(ans)
         apr = ans.to_f
         break
       else
