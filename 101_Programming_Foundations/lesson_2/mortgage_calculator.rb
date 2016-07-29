@@ -1,4 +1,4 @@
-# margage_calculator.rb
+# mortgage_calculator.rb
 
 def prompt_puts(message, style = '-->')
   puts "\n"
@@ -30,7 +30,7 @@ def number_thousand_format(number)
   parts.join('.')
 end
 
-prompt_puts('Welcome to the Morgage Calculator!')
+prompt_puts('Welcome to the Mortgage Calculator!')
 
 loop do
   loan_amount = ''
@@ -94,4 +94,4 @@ loop do
   break unless answer.downcase.start_with?('y')
 end
 
-prompt_puts("Thank you for using the morgage calculator. Good bye!")
+prompt_puts("Thank you for using the mortgage calculator. Good bye!")
