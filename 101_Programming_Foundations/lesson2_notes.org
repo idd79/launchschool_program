@@ -1,0 +1,339 @@
+#+TITLE: Lesson 2 Notes
+#+AUTHOR: Ivan A. Duran
+
+* Formal Pseudo-Code
+
+We need to formalize the pseudo-code a little bit using some keywords to
+help us break down the logic of the program into concrete commands and
+later makes translating to program code much easier.
+
+Keywords we can use are:
+
+| keyword               | meaning                                |
+|-----------------------+----------------------------------------|
+| START                 | start of the program                   |
+| SET                   | sets a variable we can use for later   |
+| GET                   | retrieve input from user               |
+| PRINT                 | displays output to user                |
+| READ                  | retrieve value from variable           |
+| IF / ELSE IF / ELSE   | show conditional branches in logic     |
+| WHILE                 | show looping logic                     |
+| END                   | end of program                         |
+
+Example:
+
+#+BEGIN_SRC ruby
+    START
+
+    # Given a collection of integers called "numbers"
+    # Find the greatest number
+
+    SET iterator = 1
+    SET saved_number = value within numbers collection at space 1
+
+    WHILE iterator < length of numbers
+      SET current_number = value within numbers collection at space "iterator"
+      IF saved_number >= current_number
+        go to the next iteration
+      ELSE
+        saved_number = current_number
+
+      iterator = iterator + 1
+
+    PRINT saved_number
+
+    END
+#+END_SRC
+
+-  The only disadvantage of pseudo-code is that we cannot verify that
+   the logic in the pseudo-code is sound until we actually go ahead and
+   translate into program code.
+
+-  Translating the above pseudo-code to actual programming code would be
+   the following:
+
+#+BEGIN_SRC ruby
+    def find_greatest(numbers)
+      saved_number = nil
+
+      numbers.each do |num|
+        saved_number ||= num  # assign to first value
+        if saved_number >= num
+          next
+        else
+          saved_number = num
+        end
+      end
+
+      saved_number
+    end
+#+END_SRC
+
+-  Look at the conditional assignment operator =||== which will assign a
+   value to a variable only if that variable is empty, otherwise it will
+   not assign a new value. It is useful in this case to assign the first
+   value to =saved_number=.
+
+-  After checking that the above logic works, we can start improving our
+   code. For example, instead of checking whether =saved_number= is set
+   to =nil= in every iteration, we could just assign =saved_number= to
+   =numbers.first= instead (of =saved_number ||= num=).
+
+-  For bigger and more sophisticated problems, we need to take a
+   piecemeal approach to applying pseudo-code, then translating that to
+   Ruby code to verify the logic is correct, then moving on to the next
+   piece in the problem. Step by step, we can slowly load the problem
+   into our brain, verifying the logic each step along the way.
+
+* Rubocop
+
+-  Install gem with =$ gem install rubocop=
+-  Then use rubocop on a file, e.g., =$ rubocop test.rb=
+-  In rubocop output, =C= stands for convention, =W= for warning, =E=
+   for error, and =F= for fatal error.
+-  We can also use =$ rubocop test.rb --format offenses= to find out
+   which cop complained.
+-  We can configure rubocop to, for example, not to enforce certain
+   offenses. Rubocop will look for a =.rubocop.yml= file for
+   configuration settings.
+-  Example:
+
+#+BEGIN_EXAMPLE
+    # .rubocop.yml
+
+    Style/StringLiterals:
+      Enabled: false
+      EnforcedStyle: single_quotes
+      SupportedStyles:
+      - single_quotes
+      - double_quotes
+#+END_EXAMPLE
+
+* Refactoring calculator.rb
+
+-  Use =%w(1 2 3 4)= to get an array of strings which is equal to
+   =["1", "2", "3", "4"]=.
+-  Other % literals are:
+
+   -  %r() is another way to write a regular expression.
+   -  %q() is another way to write a single-quoted string (and can be
+      multi-line, which is useful)
+   -  %Q() gives a double-quoted string
+   -  %x() is a shell command
+   -  %i() gives an array of symbols (Ruby >= 2.0.0)
+   -  %s() turns foo into a symbol (:foo)
+
+-  If you need to use a variable outside a =loop= that it's going to be
+   determined inside the =loop=, make sure to initialize that variable
+   outside the loop, e.g., =number = ''=.
+
+* Debugging
+
+You might want to follow these steps to debugging:
+
+1. Reproduce the error
+2. Determine the boundaries of the error
+3. Trace the code
+4. Understand the problem well
+5. Implement a fix
+6. Test the fix
+
+* Techniques for debugging
+
+1. Line by line
+2. Rubber Duck
+3. Walking away
+4. Using pry: require pry (=require "pry"=) insert a =binding.pry=
+   anywhere in your code. To continues the execution of your program
+   type =Ctrl+D=.
+5. Using a debugger: pry can also be used as a real debugger. We will
+   cover this later, for now use pry in the above mentioned way.
+
+* Calculator Bonus Features
+
+-  For better integer validation:
+
+   -  =input.to_i.to_s == input=
+   -  Use regex, e.g.: =input =~ /[0-9]/=, or =/^\d+$/.match(input)=
+   -  Use embedded function: =Integer(input) rescue false=. Be careful
+      with the use of =rescue= as it is consider as "code smell" given
+      that it might suppress errors that might affect other parts of the
+      code as well.
+
+-  For float validation:
+
+   -  =input.to_f.to_s == input=
+   -  Use regex, e.g.:
+      =/\d/.match(input) && /^\d*\.?\d*$/.match(input)=.
+   -  Use embedded function: =Float(input) rescue false=.
+
+-  Extracting messages in the program to a configuration file:
+
+   -  Use =yaml= format to extract the messages into a configuration
+      file. Example:
+
+   #+BEGIN_SRC ruby
+       # calculator_messages.yml
+
+       welcome: "Welcome to Calculator! Enter your name:"
+       valid_name: "Make sure to end a valid name."
+
+       # ... rest of file omitted for brevity
+   #+END_SRC
+
+   -  Then we can call each message in the following way:
+
+   #+BEGIN_SRC ruby
+       # at the top of calculator.rb
+
+       require 'yaml'
+       MESSAGES = YAML.load_file('calculator_messages.yml')
+
+       # replace this:
+       prompt("Welcome to Calculator! Enter your name:")
+
+       # with this:
+       prompt(MESSAGES['welcome'])
+   #+END_SRC
+
+   -  Notice that =MESSAGES= is a normal Ruby hash, so we just use the
+      hash methods to call each message.
+
+-  Messages in different languages:
+
+   -  Modify the =yaml= file:
+
+   #+BEGIN_SRC ruby
+       # reorganizing the calculator_messages.yml
+
+       en:
+         welcome: "Welcome to Calculator! Enter your name:"
+         valid_name: "Make sure to enter a valid name."
+       es:
+         welcome: "Bienvenido a la calculadora! Entre su nombre:"
+         valid_name: "Asegúrese de entrar un nombre válido."
+   #+END_SRC
+
+   -  Then in our code use:
+
+   #+BEGIN_SRC ruby
+       # top of calculator.rb
+
+       LANGUAGE = 'en'
+
+       def messages(message, lang='en')
+         MESSAGES[lang][message]
+       end
+
+       # whenever you call the prompt, you can do this:
+
+       prompt(messages('welcome', LANGUAGE))
+
+       # or if you think that's too verbose, you can do this:
+
+       def prompt(key)
+         message = messages(key, LANGUAGE)   # make sure the "messages" method is declared above this line
+         Kernel.puts("=> #{message}")
+        end
+
+       # now you can just do:
+       prompt('welcome')
+   #+END_SRC
+
+* Coding Tips
+
+** Dramatic Experience and Retaining Knowledge
+
+-  The only way to retain information is to pay with time. Debugging an
+   issue for hours and hours will ensure that his problem gets /burned/
+   into the long term memory.
+
+#+BEGIN_QUOTE
+  If you are serious about programming and you want to do it for years
+  and maybe decades from today, then the hours you spend into debugging
+  little things are really going to help you retain knowledge for the
+  long haul.
+#+END_QUOTE
+
+** Naming things
+
+- There is no need to save on characters
+- Choose descriptive variable and method names.
+
+** Naming conventions
+
+- Follow Ruby conventions when naming things.
+
+#+BEGIN_QUOTE
+In Ruby, make sure to use =snake_case= when naming everything, except classes
+which are =CamelCase= or constants, which are all =UPPERCASE=.
+#+END_QUOTE
+
+- Using Rubocop will help you catch some of these issues as well.
+
+** Mutating Constants
+
+- Do not add or remove values from a variables that has been defined as a
+  constant, e.g. =CARDS = [1, 2, 3]= is a constant.
+- CONSTANTS should be immutable.
+  
+** Methods
+
+- Your methods should be short, i.e., around 10 lines. If longer than 15, it
+  would be probably better to split it in 2 or 3 methods.
+- Guidelines:
+  - It should not display something to the output as well as return a value.
+  - Decide whether the method should return something with no side effects or
+    only perform side effects with no return.
+  - Add =!= to the name of the method to signify side effects.
+
+** Methods should be at the same level of abstraction
+
+- We should be able to just copy and paste a method into irb and taste it.
+- When working with a method, you should be able to mentally extract the method
+  from the larger program, and just work with the method in isolation.
+
+** Method names should reflect mutation
+
+- Example:
+
+#+BEGIN_SRC ruby
+def update_tota(total, cards)
+end
+#+END_SRC
+
+- When we see a method called =update_total=, we assume that the parameter
+  passed in to it will be mutated.
+- Therefore, we wouldn't expect to be able to use this method like ~total =
+  update_total(total, cards)~. In other words, we wouldn't expect this method to
+  return a value.
+- Your goal should be to build small methods that are like LEGO blocks: they
+  should be stand-alone pieces of functionality that you can use to piece
+  together larger structures. You don't want these methods to be mentally taxing
+  to use.
+
+** Displaying output
+
+- Example:
+
+#+BEGIN_SRC ruby
+def welcome
+  puts "welcome"
+end
+#+END_SRC
+
+- The above method is not clear it returns a string or if outputs strings
+  directly. So we should add to the method's name something like =display_= or
+  =say_= or =_print=.
+
+** Miscellaneous Tips
+
+- Your program should probably have one exit point.
+- Use 2 spaces for indentation, no tabs.
+- Name your methods from the perspective of using them later. E.g., =find_ace=,
+  so later you can use it like ~ace = find_ace(cards)~, instead of something
+  like ~find_ace_from_cards(cards)~, since it is redundant as where else can you
+  find an ace from but from a pile of cards?
+- Know when to use a "do/while" vs a "while" loop.
+- In Ruby, everything is truth except =nil= and =false=.
+
