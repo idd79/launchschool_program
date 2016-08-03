@@ -337,3 +337,184 @@ end
 - Know when to use a "do/while" vs a "while" loop.
 - In Ruby, everything is truth except =nil= and =false=.
 
+  
+* Variable Scope
+
+- In this assignment we will only talk about *local variables*.
+
+** Variables and Blocks
+
+- Blocks in Ruby create a new scope for local variables.
+- You can think of a scope created by a block as an /inner scope/.
+- A variable's scope is determined by where it is initialized.
+  - Variables initialized in an outer scope can be accessed in an inner scope,
+    but not vice-versa.
+- Example:
+
+#+BEGIN_SRC ruby
+a = 1         # outer scope variable
+
+loop do       # the block creates an inner scope
+  puts a      # => 1
+  a = a + 1   # "a" is re-assigned to a new value
+  break       # necessary to prevent infinite loop
+end
+
+puts a        # => 2  "a" was re-assigned in the inner scope
+#+END_SRC
+
+- From the previous example we can identify that inner scope can access outer
+  scope variables, and also that you can /change/ variables from an inner scope
+  and have that change affect the outer scope.
+- Another example:
+
+#+BEGIN_SRC ruby
+loop do       # the block creates an inner scope
+  b = 1
+  break
+end
+
+puts b        # => NameError: undefined local variable or method `b' for main:Object
+#+END_SRC
+
+- In the example above, =b= cannot be accessed as it was initialized in the
+  inner scope.
+- This also implies that we can re-use the variables names that are initialized
+  in a inner scope.
+- Nested blocks follow the same rules of inner and outer scoped variables.
+- Variable shadowing example:
+
+#+BEGIN_SRC ruby
+n = 10
+
+[1, 2, 3].each do |n|
+  puts n
+end
+
+puts n        # => 10
+#+END_SRC
+
+- In this case, the =puts n= will use the block parameter =n= and disregard the
+  outer scoped local variables ~n = 10~.
+- Also, variable shadowing prevent us from making changes to the outer scoped
+  =n=.
+
+** Variables and methods
+
+- Unlike blocks, method scopes are entirely self contained. Methods have no
+  notion of "outer" or "inner" scope as you must explicitly pass any parameters
+  to the method.
+- Example:
+
+#+BEGIN_SRC ruby
+a = 'hi'
+
+def some_method
+  puts a
+end
+
+# invoke the method
+some_method     # => NameError: undefined local variable or method `a' for main:Object
+#+END_SRC
+
+
+** Blocks within Methods
+
+- Rules of block scope hold even if we are working inside a method.
+
+
+** Constants
+
+- The scoping rules of constants is not the same as local variables.
+- Constants behave like globals.
+- Example:
+
+#+BEGIN_SRC ruby
+USERNAME = 'Batman'
+
+def authenticate
+  puts "Logging in #{USERNAME}"
+end
+
+authenticate    # => Logging in Batman
+#+END_SRC
+
+- That means that constants leak into methods, unlike local variables.
+
+#+BEGIN_SRC ruby
+FAVORITE_COLOR = 'taupe'
+
+1.times do
+  puts "I love #{FAVORITE_COLOR}!"  # => I love taupe!
+end
+#+END_SRC
+
+- Constants also leak into blocks as above.
+
+#+BEGIN_SRC ruby
+loop do
+  MY_TEAM = "Phoenix Suns"
+  break
+end
+
+puts MY_TEAM    # => Phoenix Suns
+#+END_SRC
+
+- Constants can also been accessed in the outer scope if initialized in the
+  inner scope.
+
+
+* Pass by Reference vs Pass by Value
+
+** What does pass by "value" mean?
+
+- In C, when you "pass by value", the method only has a /copy/ of the original
+  object. Operations performed on the object within the method have no effect on
+  the original object outside of the method.
+- Some Rubyists say Ruby is "pass by value" because re-assigning the object
+  within the method doesn't affect the object outside the method.
+- Example:
+
+#+BEGIN_SRC ruby
+def change_name(name)
+  name = 'bob'      # does this reassignment change the object outside the method?
+end
+
+name = 'jim'
+change_name(name)   # => will return 'bob', not 'jim'
+puts name           # => jim
+#+END_SRC
+
+
+** What does pass by "reference" mean?
+
+- Ruby is not purely "pass by value", otherwise there would be no way for
+  operations within a method to cause changes to the original object. However,
+  this is possible.
+- Example:
+
+#+BEGIN_SRC ruby
+def cap(str)
+  str.capitalize!   # does this affect the object outside the method?
+end
+
+name = "jim"
+cap(name)
+puts name           # => Jim
+#+END_SRC
+
+- This implies that Ruby is "pass by reference".
+
+
+** What Ruby does
+
+- As we can see, Ruby exhibits a combination of both "pass by reference" and
+  "pass by value".
+- Some people call this /pass by reference of the value/ or /call sharing/.
+- The important thing to remember is that
+#+BEGIN_QUOTE
+when an operation within the method mutates the caller, it will affect the
+original object
+#+END_QUOTE
+
+

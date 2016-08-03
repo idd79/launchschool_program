@@ -1,0 +1,2066 @@
+#+TITLE: Notes - Introduction to Programming with Ruby
+
+* The Basics
+
+Check the class of an object with the method =:class=. E.g:
+
+#+BEGIN_SRC ruby
+    5.class #=> Fixnum
+#+END_SRC
+
+** Strings:
+
+-  Surrounded either with ' ' or " "
+-  For string interpolation use ""
+-  String interpolation is done with =#{}= Example:
+
+#+BEGIN_SRC ruby
+        a = 'ten'
+        puts "my favorite number is #{a}!"
+#+END_SRC
+
+** Symbols:
+
+-  Created by placing (:) before a word. E.g. =:name=, or
+   ="this is also a symbol"=
+-  It is immutable (see later use in Hashes)
+
+** Numbers:
+
+-  Floats (5.0), Integers (5)
+-  Use =to_i= or =to_f= to change from integer to float and vice versa
+
+** Nil
+
+It's a way to express "nothing". A variable with =nil= means that is
+empty or simply not an specific type. For example when output is
+expected but none is returned, such as in
+
+#+BEGIN_SRC ruby
+    puts "Hello world!"
+    #=> nil
+#+END_SRC
+
+That is, the =puts= method prints out a string but returns nothing.
+
+To check if something is a =nil= type, we can use =.nil?=.
+
+If used in an expression such as an =if= statement, =nil= will be
+treated as =false=. Example:
+
+#+BEGIN_SRC ruby
+    if nil
+      puts "Hello, world"
+    end
+    #=> nil
+#+END_SRC
+
+However, there is a /caveat/ to this, as =false == nil= will return
+=false=. That means that even tough they are treated as negative within
+an expression, they are not equivalent.
+
+** Operations:
+
+-  Additions =+=, subtraction =-=, multiplication =*=, division =/=,
+   modulo (i.e. remainder) =%=, and power operation =**=.
+-  When two =integers= are operated, the result is an =integer=,
+   however, when operated against a =float=, the result is a float, i.e.
+
+#+BEGIN_SRC ruby
+    4 + 4.0
+    #=> 8.0
+#+END_SRC
+
+-  if you compare =4 == 4.0= the results is =true=.
+
+** Equality Comparison
+
+-  Achieved with the ==== operator.
+-  Comparing will return a *boolean object* (=ture=, or =false=)
+-  It can be used with strings as well, ='foo' == 'bar' => false=,
+   ='foo' == 'foo' => false=
+-  ='4' == 4= will return =false= as you are comparing two different
+   types.
+
+** String concatenation
+
+-  We use the =+= operator.
+
+#+BEGIN_SRC ruby
+    'foo' + 'foo'
+    #=> 'foofoo'
+#+END_SRC
+
+-  If used between a string and a number, it will give you an error
+   (i.e., ='1' + 1=).
+
+** Type Conversion
+
+-  =:to_i=, =:to_f=, =:to_s= (to string)
+-  Examples:
+
+#+BEGIN_SRC ruby
+    'hi there 4'.to_i
+    #=> 0
+
+    '4'.to_f
+    #=> 4.0
+
+    '4 hi there'.to_f
+    #=> 4.0
+
+    'hi there 4'.to_f
+    #=> 0.0
+
+    4.0.to_s
+    #=> "4.0"
+#+END_SRC
+
+** Basic Data Structures
+
+*** Arrays
+
+-  Arrays are used to organize information into an ordered list. It can
+   be made up of any data type (e.g., strings, integers, floats, hashes,
+   arrays, booleans)
+
+#+BEGIN_SRC ruby
+    a = [1, 2, 3, 4, 5]
+#+END_SRC
+
+-  Each element of an array can be accessed by an index. The indexes are
+   numbered starting at zero. For example:
+
+#+BEGIN_SRC ruby
+    [1, 2, 3, 4, 5][0]
+    #=> 1
+#+END_SRC
+
+*** Hashes
+
+-  Also referred to as a Dictionary, is a set of key-value pairs.
+-  It is represented in curly braces ={ }=.
+-  A key is assigned a specific value. The key, usually represented by a
+   symbol, is assigned or points to a value (denoted using a ==>=) of
+   any type of data
+-  Examples:
+
+#+BEGIN_SRC ruby
+    {:dog => 'barks', :cat => "meows", :pig => 'oinks'}
+    # => {:dog => 'barks', :cat => "meows", :pig => 'oinks'}
+#+END_SRC
+
+-  We can retrieve a value by its key. E.g.
+
+#+BEGIN_SRC ruby
+    h = {:dog => 'barks', :cat => "meows", :pig => 'oinks'}
+    h[:cat]
+    # => "meows"
+#+END_SRC
+
+-  Also, add new key-value pairs to an existing hash, e.g.
+
+#+BEGIN_SRC ruby
+    h[:cow] = "muuu"
+    # So now, h is
+    {:dog=>"barks", :cat=>"meows", :pig=>"oinks", :cow=>"muuu"}
+#+END_SRC
+
+** Expressions and Return
+
+-  When you type something in irb (or pry), you are creating an
+   expression. Once you enter it, you get a ==>= back, which is called a
+   /hash rocket/, followed by whatever your Ruby expression returns.
+-  An expression is anything that can be evaluated (pretty much
+   everything).
+-  An expression will always return something, even if it is an error
+   (erro message) or =nil=.
+
+** puts vs return
+
+-  The =puts= method prints something to the screen, however it does not
+   return what is printed, it actually returns =nil=. E.g.
+
+#+BEGIN_SRC ruby
+    puts 'stuff'
+    stuff
+    # => nil
+#+END_SRC
+
+Another example:
+
+#+BEGIN_SRC ruby
+    a = puts "something"
+    puts a
+    # => nil
+    a
+    # => nil
+#+END_SRC
+
+Since =a= is assigned to the value returned by =puts "something"=, which
+is =nil=, =a= also returns =nil=.
+
+-  More about =puts= and =return= when we discuss about methods.
+
+** Exercises (The Basics)
+
+1. Add two strings together that, when concatenated, return your first
+   and last name as your full name in one string.
+
+   #+BEGIN_SRC ruby
+       "<Firstname> <Lastname>"
+   #+END_SRC
+
+   For example, if your name is John Doe, think about how you can put
+   "John" and "Doe" together to get "John Doe".
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       "Bob " + "Smith"
+   #+END_SRC
+
+2. Use the modulo operator, division, or a combination of both to take a
+   4 digit number and find the digit in the:
+
+   1. thousands place
+   2. hundreds place
+   3. tens place
+   4. ones place
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       thousands = 4936 / 1000
+       hundreds = 4936 % 1000 / 100
+       tens = 4936 % 1000 % 100 / 10
+       ones = 4936 % 1000 %100 % 10
+
+       # or for the tens and ones
+       tens = 4936 % 100 / 10
+       ones = 4936 % 10
+   #+END_SRC
+
+3. Write a program that uses a hash to store a list of movie titles with
+   the year they came out. Then use the puts command to make your
+   program print out the year of each movie to the screen. The output
+   for your program should look something like this.
+
+   #+BEGIN_SRC ruby
+       1975
+       2004
+       2013
+       2001
+       1981
+   #+END_SRC
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+        movies = { jaws: 1975,
+                 anchorman: 2004,
+                 man_of_steel: 2013,
+                 a_beautiful_mind: 2001,
+                 the_evil_dead: 1981 }
+
+       puts movies[:jaws]
+       puts movies[:anchorman]
+       puts movies[:man_of_steel]
+       puts movies[:a_beautiful_mind]
+       puts movies[:the_evil_dead]
+   #+END_SRC
+
+4. Use the dates from the previous example and store them in an array.
+   Then make your program output the same thing as exercise 3.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       dates = [1975, 2004, 2013, 2001, 1981]
+
+       puts dates[0]
+       puts dates[1]
+       puts dates[2]
+       puts dates[3]
+       puts dates[4]
+   #+END_SRC
+
+5. Write a program that outputs the factorial of the numbers 5, 6, 7,
+   and 8.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       puts 5 * 4 * 3 * 2 * 1
+       puts 6 * 5 * 4 * 3 * 2 * 1
+       puts 7 * 6 * 5 * 4 * 3 * 2 * 1
+       puts 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1
+   #+END_SRC
+
+6. Write a program that calculates the squares of 3 float numbers of
+   your choosing and outputs the result to the screen.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       puts 4.30 * 4.30
+       puts 6.13 * 6.13
+       puts 124.34 * 124.34
+   #+END_SRC
+
+7. What does the following error message tell you?
+
+   #+BEGIN_SRC ruby
+       SyntaxError: (irb):2: syntax error, unexpected ')', expecting '}'
+           from /usr/local/rvm/rubies/ruby-2.0.0-rc2/bin/irb:16:in `<main>'
+   #+END_SRC
+
+   *Solution*
+
+   There is an opening bracket somewhere in the program without a
+   closing bracket following it. It may have happened when creating a
+   hash.
+
+* Variables
+
+** What is a Variable?
+
+Variables are used to store information and to be referenced and
+manipulated in a program. Their sole purpose is to label and store data
+in memory.
+
+** Assigning Value to a Variable
+
+-  Try your best to assign names to your variables accurately,
+   descriptively and understandably to another reader of your program
+   (even if it is yourself at a later point in time).
+-  To assign a value to a variable, you use the === symbol. The name of
+   the variable goes to the left, and the value goes to the right.
+
+#+BEGIN_SRC ruby
+    first_name = 'Joe'
+    # => "Joe"
+    # Later, to refer to that variable, we just
+    first_name
+    # => "Joe"
+
+    # Other examples:
+    a = 4
+    b = 5
+#+END_SRC
+
+-  Variables point to values in memory, and are not deeply linked to
+   each other. For example:
+
+#+BEGIN_SRC ruby
+    a = 4
+    # => 4
+    b = a
+    # => 4
+    a = 7
+    # => 7
+    b
+    # => 4
+#+END_SRC
+
+In the example above, after reassigning the value of =a= to 7, =b=
+stills points to 4, and not to 7 (More about this in the last section of
+the book).
+
+** Getting Data from a User
+
+-  One way to get information from the user is to call the =gets= method
+   ("get string").
+-  If you by itself, it will add ="n"= to the end of the string (which
+   represents) the "newline" character or enter key.
+-  To avoid this, we use =gets= together with =chomp=.
+
+#+BEGIN_SRC ruby
+    name = gets
+    Bob
+    # => "Bob\n"
+    name = gets.chomp
+    Bob
+    # => "Bob"
+    name + ' is super great!'
+    "Bob is super great!"
+#+END_SRC
+
+-  *Note*: when writing a script in Ruby that is going to run in the
+   terminal (e.g., bash), and you are using arguments in your command
+   (captured in Ruby by =ARGV=), use =$stdin.gets.chomp=, or
+   =STDIN.gets.chomp= instead, otherwise you will get en error. This is
+   because =gets= will use the =Kernel#gets=, which first tries to read
+   the contents of files passed in through =ARGV=.
+
+** Variable Scope
+
+-  Variables' scope determines where in a program a variable is
+   available for use.
+-  In Ruby, the variable scope is defined by a block.
+-  Inner scope can access variables initialized in an outer scope, but
+   not vice versa. For example:
+
+#+BEGIN_SRC ruby
+    a = 5  # variable initialized in the outer scope
+
+    3.times do |n|
+      a = 3        # a is available here in the inner scope
+    end 
+
+    puts a
+
+    # => 3         # This means that a was reassigned in the inner scope (actually 3 times).
+
+    # Another example,
+
+    3.times do |n|
+      puts a         # a is available here in the inner scope
+    end 
+
+    # =>
+    5
+    5
+    5
+
+    # Another example:
+
+    a = 5  # variable initialized in the outer scope
+
+    3.times do |n|
+      puts a = 3         # a is available here in the inner scope
+    end 
+
+    # =>
+    3
+    3
+    3
+#+END_SRC
+
+-  In the previous example, =a= was initialized in the outer scope and
+   therefore was available in the inner scope, either to use it as it
+   is, or to reassign its value.
+-  If a variable is initialized in the inner scope, it won't be
+   available in the outer scope, that is, outside the block. E.g.:
+
+#+BEGIN_SRC ruby
+    a = 5
+
+    3.times do |n|
+      a = 3
+      b = 5
+    end
+
+    puts a
+    # => 3
+    puts b
+    # => Will give you an error such as:
+    # scope.rb:11:in `<main>': undefined local variable or method `b' for main:Object
+    # (NameError)
+#+END_SRC
+
+-  Methods create their own scope that is entirely outside of the
+   execution flow. For example:
+
+#+BEGIN_SRC ruby
+    a = 5
+
+    def some_method
+      a = 3
+    end
+
+    puts a
+    # => 5
+#+END_SRC
+
+-  In the above example, =a= is still 5.
+-  Note: the key distinguishing factor for deciding whether code
+   delimited by {} or do/end is considered a block (and thereby creating
+   a new scope for variables), is seeing if the {} or do/end immediately
+   follows a method invocation. For example:
+
+#+BEGIN_SRC ruby
+    arr = [1, 2, 3]
+
+    for i in arr do
+      a = 5      # a is initialized here
+    end
+
+    puts a       # is it accessible here?
+#+END_SRC
+
+-  The answer is yes. The reason is because the =for...do/end= code did
+   not create a new inner scope, since for is part of Ruby language and
+   not a method invocation. When we use =each=, =times= and other
+   methods, followed by ={}= or =do/end=, that's when a new block is
+   created.
+
+** Types of Variables
+
+-  Constants, declared by capitalizing every letter. E.g.
+   =MY_CONSTANT = "Hello World"=.
+-  Global, declared by a dollar sign followed by the name of the
+   variable. E.g. =$var = "Hello World again"=.
+-  Class variables, declared with =@@=. E.g. =@@instances = 0=. These
+   variables are accessible by instances of your class, as well as the
+   class itself.
+-  Instance variables are declared with =@=. E.g.
+   =@var = "I am an instance variable"=. hese variables are available
+   throughout the current instance of the parent class. Instance
+   variables can cross some scope boundaries, but not all of them. You
+   will learn more about this when you get to OOP topics.
+-  Local variables, are the most common variables you will come across
+   and obey all scope boundaries. These variables are declared by
+   starting the variable name with neither $ nor @, as well as not
+   capitalizing the entire variable name. E.g. =var = "Hello last"=.
+
+** Exercises (Variables)
+
+1. Write a program called name.rb that asks the user to type in their
+   name and then prints out a greeting message with their name included.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       # name.rb
+
+       puts "What is your name?"
+       name = gets.chomp
+       puts "Hello " + name
+   #+END_SRC
+
+2. Write a program called age.rb that asks a user how old they are and
+   then tells them how old they will be in 10, 20, 30 and 40 years.
+   Below is the output for someone 20 years old.
+
+   #+BEGIN_SRC ruby
+       # output of age.rb for someone 20 yrs old
+
+       How old are you?
+       In 10 years you will be:
+       30
+       In 20 years you will be:
+       40
+       In 30 years you will be:
+       50
+       In 40 years you will be:
+       60
+   #+END_SRC
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       puts "How old are you?"
+       age = gets.chomp.to_i
+       puts "In 10 years you will be:"
+       puts age +  10
+       puts "In 20 years you will be:"
+       puts age +  20
+       puts "In 30 years you will be:"
+       puts age +  30
+       puts "In 40 years you will be:"
+       puts age +  40
+   #+END_SRC
+
+3. Add another section onto name.rb that prints the name of the user 10
+   times. You must do this without explicitly writing the puts method 10
+   times in a row. Hint: you can use the times method to do something
+   repeatedly.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       # Add the following
+       10.times do
+         puts name
+       end
+   #+END_SRC
+
+4. Modify name.rb again so that it first asks the user for their first
+   name, saves it into a variable, and then does the same for the last
+   name. Then outputs their full name all at once.
+
+   *Solution*
+
+   #+BEGIN_SRC ruby
+       # name.rb continued again
+
+       puts "What is your first name?"
+       first_name = gets.chomp
+       puts "Thank you. What is your last name?"
+       last_name = gets.chomp
+       puts "Great. So your full name is " + first_name + " " + last_name
+   #+END_SRC
+
+5. Look at the following programs...
+
+   #+BEGIN_SRC ruby
+       x = 0
+       3.times do
+         x += 1
+       end
+       puts x
+   #+END_SRC
+
+   and...
+
+   #+BEGIN_SRC ruby
+       y = 0
+       3.times do
+         y += 1
+         x = y
+       end
+       puts x
+   #+END_SRC
+
+   What does x print to the screen in each case? Do they both give
+   errors? Are the errors different? Why?
+
+   *Solution*
+
+   The first prints =3= to the screen. The second throws an error
+   =undefined local variable or method= because =x= is not available as
+   it is created within the scope of the =do/end= block
+
+6. What does the following error message tell you?
+
+   #+BEGIN_SRC ruby
+       NameError: undefined local variable or method `shoes' for main:Object
+         from (irb):3
+         from /usr/local/rvm/rubies/ruby-2.0.0-rc2/bin/irb:16:in `<main>'
+   #+END_SRC
+
+   *Solution*
+
+   The program is trying to reference a variable or method named =shoes=
+   that has not been defined in the program, or is outside of the scope
+   in which it is being called.
+
+* Methods
+
+** What are the methods and why do we need them?
+
+-  A method is a piece of code that instead of writing it over and over
+   again, it can be stored and be given a name to reuse it later on.
+-  It is define with =def/end=.
+-  It can take or not arguments.
+-  Examples:
+
+#+BEGIN_SRC ruby
+    def say
+      puts "Say what?"
+    end
+
+    say
+    # => Say what?
+    # => nil
+
+    def say(words)
+      puts words
+    end
+
+    say("hello")
+    say("hi")
+
+    # => hello
+    # => hi
+#+END_SRC
+
+** Default parameters
+
+-  Default parameters are given as:
+
+#+BEGIN_SRC ruby
+    def say(words='hello')
+      puts words + "."
+    end
+
+    say()
+    say("hi")
+
+    # => hello.
+    # => hi.
+#+END_SRC
+
+-  If not argument is given for a default parameter, the default value
+   is used instead.
+-  Optional parentheses: this means that =say("hi")= is equivalent to
+   =say "hi"=.
+
+** Mutating the Caller
+
+-  Example:
+
+#+BEGIN_SRC ruby
+    # Example of a method that modifies its argument permanently
+
+    a = [1, 2, 3]
+
+    def mutate(array)
+      array.pop
+    end
+
+    p "Before mutate method: #{a}"
+    mutate(a)
+    p "After mutate method: #{a}"
+#+END_SRC
+
+-  =:pop= is a method that mutates the caller, therefore in the above
+   example, =a= has changed.
+-  Other methods such as =last=, does not mutate the caller: =a.last=
+   will give us the last value of =a= without modifying =a=.
+-  Look at the documentation, or try in irb or pry, whether a method
+   mutates or not the caller.
+
+** Puts vs return: The sequel
+
+-  In Ruby, every method returns the evaluated result of the last line
+   that is executed.
+-  Example:
+
+#+BEGIN_SRC ruby
+    # return.rb
+
+    def add_three(number)
+      number + 3
+    end
+
+    returned_value = add_three(4)
+    puts returned_value
+#+END_SRC
+
+-  In the above example, your output should print 7 because that's what
+   the method returned.
+-  Ruby methods ALWAYS return the evaluated result of the last line of
+   the expression unless an explicit return comes before it. For
+   example:
+
+#+BEGIN_SRC ruby
+    # return.rb
+
+    def add_three(number)
+      return number + 3
+      number + 4
+    end
+
+    returned_value = add_three(4)
+    puts returned_value
+#+END_SRC
+
+-  The program above still output 7, the number you told it to return.
+   The last line in the method is not reached or executed.
+-  The =return= reserved word is not required in order to return
+   something from a method. This is a feature of the Ruby language. For
+   example, consider this method:
+
+#+BEGIN_SRC ruby
+    def just_assignment(number)
+      foo = number + 3
+    end
+#+END_SRC
+
+-  The value of =just_assignment(2)= is going to be 5 because the
+   assignment expression evaluates to 5, therefore that's what's
+   returned.
+
+** Chaining Methods
+
+-  We can chain methods together, for example:
+
+#+BEGIN_SRC ruby
+    def add_three(n)
+      n + 3
+    end
+
+    add_three(5)  # returns 8
+
+    # then chain it together with other methods
+
+    add_three(5).times { puts 'this shoult print 8 times'}
+
+    # or something like this
+
+    "hi there".length.to_s    # returns "8" as a string
+#+END_SRC
+
+** Methods as arguments
+
+-  We can use also methods as arguments of other methods. E.g.
+   =multiply(add(20, 45), substract(80, 10))=, where =multiply=,
+   =substract=, and =add= are methods created previously.
+
+** Exercises (Methods)
+
+1. Write a program that prints a greeting message. This program should
+   contain a method called =greeting= that takes a =name= as its
+   parameter and returns a string.
+
+2. What do the following expressions evaluate to?
+
+   #+BEGIN_SRC ruby
+       1. x = 2
+
+       2. puts x = 2
+
+       3. p name = "Joe"
+
+       4. four = "four"
+
+       5. print something = "nothing"
+   #+END_SRC
+
+3. Write a program that includes a method called =multiply= that takes
+   two arguments and returns the product of the two numbers.
+
+4. What will the following code print to the screen?
+
+   #+BEGIN_SRC ruby
+       def scream(words)
+         words = words + "!!!!"
+         return
+         puts words
+       end
+
+       scream("Yippeee")
+   #+END_SRC
+
+5. 
+
+   1) Edit the method in exercise #4 so that it does print words on the
+      screen. 2) What does it return now?
+
+6. What does the following error message tell you?
+
+   #+BEGIN_SRC ruby
+       ArgumentError: wrong number of arguments (1 for 2)
+         from (irb):1:in `calculate_product'
+         from (irb):4
+         from /Users/username/.rvm/rubies/ruby-2.0.0-p353/bin/irb:12:in `<main>'
+   #+END_SRC
+
+* Flow Control
+
+-  Conditional flow using conditionals which are formed using a
+   combination of =if= statements and comparison operators
+   (=<, >, <=, >=, ==, !=, &&, ||=).
+-  Structures that are defined with the reserved keywords =if=, =unles=,
+   =else=, =elsif=, and =end=.
+-  Example of conditionals:
+
+#+BEGIN_SRC ruby
+    puts "Put in a number"
+    a = gets.chomp.to_i
+
+    if a == 3
+      puts "a is 3"
+    elsif a == 4
+      puts "a is 4"
+    else
+      puts "a is neither 3, nor 4"
+    end
+#+END_SRC
+
+-  One line =if= statement:
+
+#+BEGIN_SRC ruby
+    puts "x is 3" if x == 3
+
+    # or,
+
+    puts "x is NOT 3" unless x == 3
+#+END_SRC
+
+** The Ternary Operator
+
+-  Another option for a one line conditional =if= statement is the
+   *ternary operator*, which is a combination of =?= and =:=. Example:
+
+#+BEGIN_SRC ruby
+    true ? "this is true" : "this is not true"
+    # => "this is true"
+    false ? "this is true" : "this is not true"
+    # => "this is not true"
+#+END_SRC
+
+** Case Statement
+
+-  It uses the reserved words =case=, =when=, =else=, and =end=.
+   Examples:
+
+#+BEGIN_SRC ruby
+    # case_statement.rb
+
+    a = 5
+
+    case a
+    when 5
+      puts "a is 5"
+    when 6
+      puts "a is 6"
+    else
+      puts "a is neither 5, nor 6"
+    end
+
+    # You can also save the result of a case statement, or an if statement, into a variable:
+
+    # case_statement.rb <-- refactored
+
+    a = 5
+
+    answer = case a
+      when 5
+        "a is 5"
+      when 6
+        "a is 6"
+      else
+        "a is neither 5, nor 6"
+      end
+
+    puts answer
+
+    # case_statement.rb <-- refactored with no case argument
+
+    a = 5
+
+    answer = case
+      when a == 5
+        "a is 5"
+      when a == 6
+        "a is 6"
+      else
+        "a is neither 5, nor 6"
+      end
+
+    puts answer
+#+END_SRC
+
+** True and False
+
+-  In Ruby, every expression evaluates to true when used in flow
+   control, except for =false= and =nil=. Therefore, we can use any
+   expression in the =if= statements as follows:
+
+#+BEGIN_SRC ruby
+    a = 5
+    if a
+      puts "how can this be true?"
+    else
+      puts "it is not true"
+    end
+#+END_SRC
+
+-  However, we need to be careful that when evaluating an expression
+   such as =if x = 5= it will always be =true= as it is not testing
+   whether =x= is equal to 5, but just assingning the the value of 5 to
+   =x=, so basically is not the same as =if x == 5=.
+
+** Exercises (Flow Control)
+
+1. Write down whether the following expressions return true or false.
+   Then type the expressions into irb to see the results.
+
+   #+BEGIN_SRC ruby
+       1. (32 * 4) >= 129
+       2. false != !true
+       3. true == 4
+       4. false == (847 == '874')
+       5. (!true || (!(100 / 5) == 20) || ((328 / 4) == 82)) || false
+   #+END_SRC
+
+2. Write a method that takes a string as argument. The method should
+   return the all-caps version of the string, only if the string is
+   longer than 10 characters. Example: change "hello world" to "HELLO
+   WORLD". (Hint: Ruby's String class has a few methods that would be
+   helpful. Check the Ruby Docs!).
+
+3. Write a program that takes a number from the user between 0 and 100
+   and reports back whether the number is between 0 and 50, 51 and 100,
+   or above 100.
+
+4. What will each block of code below print to the screen? Write your
+   answer on a piece of paper or in a text editor and then run each
+   block of code to see if you were correct.
+
+   ```ruby
+
+   1. '4' == 4 ? puts("TRUE") : puts("FALSE")
+
+   2. x = 2 if ((x * 3) / 2) == (4 + 4 - x - 3) puts "Did you get it
+      right?" else puts "Did you?" end
+
+   3. y = 9 x = 10 if (x + 1) <= (y) puts "Alright." elsif (x + 1) >=
+      (y) puts "Alright now!" elsif (y + 1) == x puts "ALRIGHT NOW!"
+      else puts "Alrighty!" end ```
+
+5. Rewrite your program from exercise 3 using a case statement. Wrap the
+   statement from exercise 3 in a method and wrap this new case
+   statement in a method. Make sure they both still work.
+
+6. When you run the following code...
+
+   #+BEGIN_SRC ruby
+       def equal_to_four(x)
+         if x == 4
+           puts "yup"
+         else
+           puts "nope"
+       end
+
+       equal_to_four(5)
+   #+END_SRC
+
+   You get the following message:
+
+   =test_code.rb:96: syntax error, unexpected end-of-input, expecting keyword_end=.
+
+   Why do you get this error and how can you fix it?
+
+* Loops and Interactors
+
+-  We will cover =while= loops, =do/while= loops, and =for= loops.
+
+** A Simple Loop
+
+-  The easiest way to create a loop in ruby is by using the =loop=
+   statement.
+-  =loop= takes a block which is denoted by either ={...}= or
+   =do...end=.
+-  It will execute the code withing the block until you manually
+   intervene with =ctrl + c= or insert a =break= statement inside the
+   block.
+-  Examples:
+
+#+BEGIN_SRC ruby
+    loop do
+      puts "This will keep printing until you hit Ctrl + c"
+    end
+#+END_SRC
+
+-  Another example controlling the loop
+
+#+BEGIN_SRC ruby
+    i = 0
+    loop do
+      i += 1
+      puts i
+      break     # this will cause the execution to exit the loop
+    end
+
+    # or
+
+    i = 0
+    loop do
+      i += 1
+      if i == 4
+        next
+      end
+      puts i
+      if i == 10
+        break
+      end
+    end
+#+END_SRC
+
+-  =break= and =next= are important loop control concepts that can be
+   used with =loop= or any other loop construct in Ruby.
+
+** While Loops
+
+-  It is a loop that runs while some expression evaluates to true. Once
+   it evaluates to =false= the while loop is not executed again.
+-  Example:
+
+#+BEGIN_SRC ruby
+    x = gets.chomp.to_i
+
+    while x >= 0
+      puts x
+      x -= 1
+    end
+
+    puts "Done!"
+#+END_SRC
+
+** Until Loops
+
+-  It is simply the opposite of the while loop.
+-  Example
+
+#+BEGIN_SRC ruby
+    x = gets.chomp.to_i
+
+    until x < 0
+      puts x
+      x -= 1
+    end
+
+    puts "Done!"
+#+END_SRC
+
+** Do/While Loops
+
+-  Very similar to the =while= loop with the only difference that the
+   code withing the loop gets executed one time, prior to the
+   conditional check to see if the code should be executed, therefore,
+   the conditional check is placed at the end of the loop as opposed to
+   the =while= loop.
+-  Example:
+
+#+BEGIN_SRC ruby
+    loop do
+      puts "Do you want to do that again?"
+      answer = gets.chomp
+      if answer != 'Y'
+        break
+      end
+    end
+#+END_SRC
+
+-  There's also another construct in Ruby that supports "do/while"
+   loops, like this:
+
+#+BEGIN_SRC ruby
+    begin
+      puts "Do you want to do that again??"
+      answer = gets.chomp
+    end while answer == 'Y'
+#+END_SRC
+
+-  While the above works, it's not recommende by Matz, the creator of
+   Ruby.
+
+** For Loops
+
+-  *For* loops are used to loop over a collection of elements.
+-  Collections can be something like an array or a range. Examples:
+
+#+BEGIN_SRC ruby
+    x = gets.chomp.to_i
+
+    for i in 1..x do
+      puts i
+    end
+
+    puts "Done!"
+
+    x = [1, 2, 3, 4, 5]
+
+    for i in x do
+      puts i
+    end
+
+    puts "Done!"
+#+END_SRC
+
+-  The for loop /returns/ the collection of elements after it executes,
+   whereas in the earlier while loop examples return =nil=.
+
+** Iterators
+
+-  Iterators are methods that naturally loop over a given set of data
+   and allow you to operate on each element of the collection.
+-  Examples of these methods are: =each=, =map=, =collect=.
+
+** Recursion
+
+-  Recursion is the act of calling a method within itself.
+-  Example:
+
+#+BEGIN_SRC ruby
+    def doubler(start)
+      puts start
+      if start < 10
+        doubler(start * 2)
+      end
+    end
+
+    # Another example
+
+    # Method that uses recursion to calculate 
+    # the nth number in the fibonacci sequence
+
+    print "Enter the nth number of the sequence you want to calculate: "
+    ans = gets.chomp.to_i
+
+    def fibonacci(number)
+      if number < 2
+        number
+      else
+        fibonacci(number - 1) + fibonacci(number - 2)
+      end
+    end
+
+    puts "The answer is: #{fibonacci(ans)}"
+#+END_SRC
+
+-  Another example:
+
+#+BEGIN_SRC ruby
+    # Sum of 1 to n, where n is a positive integer
+
+    # First without recursion
+
+    def sum_n1(number)
+      sum = 0
+      total = 0
+      until sum == number
+        sum += 1
+        total = total + sum
+      end
+      puts total
+    end
+
+    sum_n1(20)
+
+    # Now with recursion
+
+    def sum_n2(number)
+      if number < 2
+        number
+      else
+        number + sum_n2(number - 1)
+      end
+    end
+
+    puts sum_n2(20)
+#+END_SRC
+
+** Exercises (Loops and Iterators)
+
+1. Write a while loop that takes input from the user, performs an
+   action, and only stops when the user types "STOP". Each loop can get
+   info from the user.
+
+2. Use the =each_with_index= method to iterate through an array of your
+   creation that prints each index and value of the array.
+
+3. Write a method that counts down to zero using recursion.
+
+* Arrays
+
+-  We can find the first and last elements of an array with the methods
+   =:first= and =:last=. E.g. =array.first= or =array.last=.
+
+-  To build an array out of a range, we can do the following:
+
+#+BEGIN_SRC ruby
+    arr = Array(1..3)
+    # => [1, 2, 3]
+#+END_SRC
+
+** Modifying Arrays
+
+-  To eliminate the last item of an array permanently, we can use the
+   =:pop= menthod. This method modifies the original array.
+-  To add an item (to the end) of an array permanently, we can use the
+   =:push= method, or alternatively the =<<= operator. E.g.
+   =array << "another string"=.
+-  Iterating over an array is easy in Ruby. We can use the =map= or
+   =collect= methods. These method DO NOT change the initial array, but
+   return a new array. For modifying the initial array, we can use
+   =map!= or =collect!=.
+-  Examples:
+
+#+BEGIN_SRC ruby
+    a = [1, 2, 3, 4]
+    a.map { |num| num**2 }
+    # => [1, 4, 9, 16]
+    # same with collect
+    a.collect { |num| num**2 }
+    a
+    # => [1, 2, 3, 4]
+#+END_SRC
+
+-  The =:delete_at= method can be used to eliminate the value of an
+   array at a certain index. Be careful because it modifies the array
+   destructively.
+
+#+BEGIN_SRC ruby
+    a.delete_at(1)
+    # => 2
+    a
+    # => [1, 3, 4]
+#+END_SRC
+
+-  We can use the =:delete= method to delete the value of an array if
+   you know the value but not its index. Example:
+
+#+BEGIN_SRC ruby
+    my_pets = ["cat", "dog", "bird", "cat", "snake"]
+    my_pets.delete("cat")
+    my_pets
+    # => ["dog", "bird", "snake"]
+#+END_SRC
+
+-  Another useful method is =:uniq= which allows to iterate through an
+   array, deletes any duplicate values, then returns the result as a new
+   array. It DOES NOT modifies the initial array.
+
+   #+BEGIN_SRC ruby
+       b = [1, 1, 2, 2, 3, 3, 4, 4]
+       b.uniq
+       # => [1, 2, 3, 4]
+       b
+       # => [1, 1, 2, 2, 3, 3, 4, 4]
+   #+END_SRC
+
+-  To modify the array we can use the =:uniq!=.
+
+** Iterating Over an Array
+
+-  The =:select= method iterates over an array an returns a new array
+   that includes any items that return =true= to the expression
+   provided. Example:
+
+#+BEGIN_SRC ruby
+    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    numbers.select { |number| number > 4 }
+    [5, 6, 7, 8, 9, 10]
+    numbers
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#+END_SRC
+
+** Comparing Arrays
+
+-  We can compare arrays for equility using the ==== operator. Example:
+
+#+BEGIN_SRC ruby
+    a = [1, 2, 3]
+    b = [2, 3, 4]
+    a == b
+    # => false
+#+END_SRC
+
+-  The method =:shift= removes the first element of an array (just like
+   =pop= removes the last one). The method =unshift= adds an element at
+   the front of an array (just like =push= adds an element at the end).
+
+** to\_s
+
+-  The =:to_s= method is used to create a string representation of an
+   array. It returns a new string without modifying the original array.
+
+** Common Array Methods
+
+-  =include?= (e.g. =a.include?(3)=), returns =true= if the element is
+   included in the array.
+-  =a.flatten= can be used to convert an array that contains nested
+   arrays and create one-dimensional array (it does not mutate the
+   original object). E.g.
+
+#+BEGIN_SRC ruby
+    a = [1, 2, [3, 4, 5], [6, 7]]
+    a.flatten
+    # => [1, 2, 3, 4, 5, 6, 7]
+#+END_SRC
+
+-  =each_index= and =each_with_index=. Examples:
+
+#+BEGIN_SRC ruby
+    a = [1, 2, 3, 4, 5]
+    a.each_index { |i| puts "This is index #{i}" }
+    a.each_with_index { |val, idx| puts "#{idx+1}. #{val}" }
+#+END_SRC
+
+-  The =product= method can be used to combine two arrays. Example:
+
+#+BEGIN_SRC ruby
+    [1, 2, 3].product([4, 5])
+    # => [[1, 4], [1, 5], [2, 4], [2, 5], [3, 4], [3, 5]]
+#+END_SRC
+
+** each vs map
+
+-  Example:
+
+#+BEGIN_SRC ruby
+    a = [1, 2, 3]
+    a.map { |x| puts x**2 }
+    # => [nil, nil, nil]
+    a.map { |x| x**2 }
+    # => [1, 4, 9]
+
+    a.each { |x| puts x**2 }
+    # => 1
+    # => 4
+    # => 9
+
+    a.each
+    # => #<Enumerator: ...>
+    a.map
+    # => #<Enumerator: ...>
+#+END_SRC
+
+-  In the example above, map returns a =nil= array bacause the block
+   given is using =puts= which always returns =nil=.
+
+** Exercises (Arrays)
+
+1. Below we have given you an array and a number. Write a program that
+   checks to see if the number appears in the array.
+
+   #+BEGIN_SRC ruby
+       arr = [1, 3, 5, 7, 9, 11]
+       number = 3
+   #+END_SRC
+
+2. What will the following programs return? What is the value of =arr=
+   after each?
+
+   ```ruby
+
+   1. arr = ["b", "a"] arr = arr.product(Array(1..3))
+      arr.first.delete(arr.first.last)
+
+   2. arr = ["b", "a"] arr = arr.product([Array(1..3)])
+      arr.first.delete(arr.first.last) ```
+
+3. How do you print the word "example" from the following array?
+
+   #+BEGIN_SRC ruby
+       arr = [["test", "hello", "world"],["example", "mem"]]
+   #+END_SRC
+
+4. What does each method return in the following example?
+
+   #+BEGIN_SRC ruby
+       arr = [15, 7, 18, 5, 12, 8, 5, 1]
+
+       1. arr.index(5)
+
+       2. arr.index[5]
+
+       3. arr[5]
+   #+END_SRC
+
+5. What is the value of a, b, and c in the following program?
+
+   #+BEGIN_SRC ruby
+       string = "Welcome to America!"
+       a = string[6]
+       b = string[11]
+       c = string[19]
+   #+END_SRC
+
+6. You run the following code...
+
+   #+BEGIN_SRC ruby
+       names = ['bob', 'joe', 'susan', 'margaret']
+       names['margaret'] = 'jody'
+   #+END_SRC
+
+   and get the following error message:
+
+   #+BEGIN_SRC ruby
+       TypeError: no implicit conversion of String into Integer
+       from (irb):2:in `[]='
+                  from (irb):2
+                  from /Users/username/.rvm/rubies/ruby-2.0.0-p353/bin/irb:12:in `<main>'
+   #+END_SRC
+
+   What is the problem and how can it be fixed?
+
+7. Write a program that iterates over an array and builds a new array
+   that is the result of incrementing each value in the original array
+   by a value of 2. You should have two arrays at the end of this
+   program, The original array and the new array you've created. Print
+   both arrays to the screen using the =p= method instead of =puts.=
+
+* Hashes
+
+-  As mentioned before, a *hash* is a data structure that stores items
+   by associated keys, in contrast with arrays, which stores items by an
+   ordered index.
+-  Commonly, we use symbols as /keys/, and any data types as /values/.
+-  Example of old and new Ruby syntax for hashes:
+
+#+BEGIN_SRC ruby
+    old_syntax_hash = {:name => 'bob'}
+    # => {:name => 'bob'}
+
+    new_syntax_hash = {name: => 'bob'}
+    # => {:name => 'bob'}
+#+END_SRC
+
+-  Adding on to an existing hash:
+
+#+BEGIN_SRC ruby
+    person = { height: '6 ft', weight: '160 lbs' }
+    person[:hair] = 'brown'
+    person
+    # => {:height=>'6 ft', :weight=>'160 lbs', :hair=>'brown'}
+#+END_SRC
+
+-  To remove something from an existing hash we do something like
+   =person.delete(:age)=, so the whole key-value pair will be removed.
+-  We can retrieve information from a hash, for example with
+   =person[:weight] # => "160 lbs"=.
+-  We can also *merge* two hashes together:
+
+#+BEGIN_SRC ruby
+    person.merge!(new_syntax_hash)
+    {:height=>'6 ft', :weight=>'160 lbs', :hair=>'brown', :name=>'bob'}
+#+END_SRC
+
+-  We could have used =:merge= without the bang operator (=!=) instead,
+   if we don't want to mutate the original hash (=person= in this case).
+
+** Iterating over Hashes
+
+-  We can use the =:each= method, specifying =|key, value|= in the
+   block.
+-  Alternatively, we can use the =each_value= and =each_key= methods to
+   iterate over just the value or the key, respectively. We will have to
+   specify just =|value|= or =|key|= in each when giving the block.
+
+** Hashes as optional parameters
+
+-  We can use a hash to accept optional parameters when creating a
+   method. Example:
+
+#+BEGIN_SRC ruby
+    def greeting(name, options = {})
+      if options.empty?
+        puts "Hi, my name is #{name}"
+      else
+        puts "Hi, my name is #{name} and I'm #{options[:age]}" +
+             " years old and I live in #{options[:city]}."
+      end
+    end
+
+    greeting('Bob')
+    greeting("Bob", {age: 62, city: "New York City"})
+#+END_SRC
+
+-  You can also pass in arguments to the =greeting= method like this:
+
+#+BEGIN_SRC ruby
+    greeting("Bob", age: 62, city: "New York City")
+#+END_SRC
+
+Notice that the curly braces are not required when a hash is the last
+argument.
+
+** Common Hash Methods
+
+-  =has_key?=. It returns a boolean value if the hash has the key, e.g.:
+   =hash.has_key?("Steve")=, or =hash.has_key?(:age)=. Careful not to
+   confuse strings as keys with symbols as keys as =:age= is not the
+   same as ="age"= when used as a hash key.
+-  =select=. You need to pass a block such as
+   =hash.select { |k, v| k == "Bob" }=.
+-  =fetch=. It allows you to pass a given key and it will return the
+   value if that key exists. Example: =hash.fetch("Larry")=. If the key
+   is not present it will return an error, but you can specify an option
+   for return a message (a string) if the key is not present, such as
+   =hash.fetch("Larry", "Larry isn't in this hash")=.
+-  =to_a= method returns an array version of your hash. For example:
+
+   #+BEGIN_SRC ruby
+       name_and_age
+       # => {"Bob"=>42, "Steve"=>31, "Joe"=>19}
+       name_and_age.to_a
+       # => [["Bob", 42], ["Steve", 31], ["Joe", 19]]
+   #+END_SRC
+
+-  =keys= and =values= methods will return an array with the hash's keys
+   or values, respectively. For example:
+
+   #+BEGIN_SRC ruby
+       name_and_age.keys
+       # => ["Bob", "Steve", "Joe"]
+       name_and_age.values
+       # => [42, 31, 19]
+   #+END_SRC
+
+-  Finally, we can convert a symbol or a string back and forth with the
+   methods =to_sym= and =to_s=. E.g., =:name.to_s= or ="name".to_sym=
+
+** Exercises (Hashes)
+
+1. Given a hash of family members, with keys as the title and an array
+   of names as the values, use Ruby's built-in select method to gather
+   only immediate family members' names into a new array.
+
+   #+BEGIN_SRC ruby
+       # Given
+
+       family = {  uncles: ["bob", "joe", "steve"],
+                   sisters: ["jane", "jill", "beth"],
+                   brothers: ["frank","rob","david"],
+                   aunts: ["mary","sally","susan"]
+                 }
+   #+END_SRC
+
+2. Look at Ruby's merge method. Notice that it has two versions. What is
+   the difference between merge and merge!? Write a program that uses
+   both and illustrate the differences.
+
+3. Using some of Ruby's built-in Hash methods, write a program that
+   loops through a hash and prints all of the keys. Then write a program
+   that does the same thing except printing the values. Finally, write a
+   program that prints both.
+
+4. Given the following expression, how would you access the name of the
+   person?
+
+   #+BEGIN_SRC ruby
+       person = {name: 'Bob', occupation: 'web developer', hobbies: 'painting'}
+   #+END_SRC
+
+5. What method could you use to find out if a Hash contains a specific
+   value in it? Write a program to demonstrate this use.
+
+6. Given the array
+
+   #+BEGIN_SRC ruby
+       words =  ['demo', 'none', 'tied', 'evil', 'dome', 'mode', 'live',
+       'fowl', 'veil', 'wolf', 'diet', 'vile', 'edit', 'tide',
+       'flow', 'neon'] 
+   #+END_SRC
+
+   Write a program that prints out groups of words that are anagrams.
+   Anagrams are words that have the same exact letters in them but in a
+   different order. Your output should look something like this:
+
+   #+BEGIN_SRC ruby
+       ["demo", "dome", "mode"]
+       ["neon", "none"]
+       (etc) 
+   #+END_SRC
+
+* Files
+
+-  We can create a file with =File.new=. Example:
+
+#+BEGIN_SRC ruby
+    my_file = File.new("simple_file.txt", "w+")
+    # => #<File:simple_file.txt>
+    my_file.close
+#+END_SRC
+
+-  We want to always close files, as in the example above, as otherwise
+   they will continue occupying space in memory.
+-  =w+= is one of the modes when creating a file for read and write
+   access to the file. Other modes are: =r=, =r+=, =w=, =a=, and =a+=
+   (these are open modes, and documentation can be found
+   [[http://ruby-doc.org/core-2.1.2/IO.html#method-c-new-label-IO+Open+Mode][here]]).
+
+** Opening Files
+
+-  Use =File.open= with one of the open modes (careful with =w= or =w+=
+   as if the file exists it overwrites everything in the file).
+-  We can open a file for readinh only as well with =File.read= and
+   =File.readlines=. =File.read= returns the whole contents of the file,
+   while =File.readlines= reads the entire file based on individual
+   lines and returns those lines in an array.
+
+** Open File for Writing
+
+-  We can use =write= or =puts= methods to write to files. =puts= adds a
+   line break to the end of the strings, while =write= does not.
+-  Ruby automatically close the file if the =open= method is called with
+   a block. E.g.:
+
+#+BEGIN_SRC ruby
+    File.open("simple_file.txt", w) { |file| file.write("adding first line of text") }
+#+END_SRC
+
+-  Alternatively, we could open the file, write to it and finally close
+   it:
+
+#+BEGIN_SRC ruby
+    sample = File.open("simple_file.txt", "w+")
+    # => #<File:simple_file.txt>
+    sample.puts("another example writing to a file")
+    # => nil
+    sample.close
+    # => nil
+    File.read("simple_file.txt")
+    # => "another example writing to a file\n"
+#+END_SRC
+
+-  Inserting more text:
+
+#+BEGIN_SRC ruby
+    irb :005 > File.open("simple_file.txt", "a+") do |file|
+    irb :006 >     file << "Here we are with a new line of text"
+    irb :007?>   end
+    # => #<File:simple_file.txt (closed)>
+    irb :008 > File.readlines("simple_file.txt").each do |line|
+    irb :009 >     puts line
+    irb :010?>   end
+    another example of writing to a file.
+    Here we are with a new line of text
+    # => ["another example of writing to a file.\n", "Here we are with a new line of text"]
+#+END_SRC
+
+-  In the example above, instead of the =<<= operator, we could have
+   used =write= or put. Also, there was no need to close the file since
+   the block does it for us.
+
+#+BEGIN_SRC ruby
+    irb :001 > File.open("simple_file.txt",  "a+") do |file|
+    irb :002 >       file.write "Writing to files in Ruby is simple."
+    irb :003?>   end
+    # => 35
+    irb :004 >
+    irb :005 >   File.readlines("simple_file.txt").each_with_index do |line, line_num|
+    irb :006 >       puts "#{line_num}: #{line}"
+    irb :007?>   end
+    0: another example of writing to a file.
+    1: Here we are with a new line of textWriting to files in Ruby is simple.
+    # => ["another example of writing to a file.\n", "Here we are with a new line of textWriting to files in Ruby is simple."]
+#+END_SRC
+
+** Deleting a file
+
+-  To delete a file we use =File.delete=. Careful with this command as
+   it totally deletes the file from your system. Example:
+
+#+BEGIN_SRC ruby
+    irb :001 > File.new("dummy_file.txt", "w+")
+    # => #<File:dummy_file.txt>
+    irb :002 > File.delete("dummy_file.txt")
+    # => 1
+#+END_SRC
+
+-  Besides the =File= class we have been using in the above examples,
+   there is also two other useful classes: =Dir= and =Pathname=.
+-  =File= and =Dir= you don't need to =require= them. =Pathname= you
+   might have to state at the top of your program =require 'pathname'=
+   depending of your Ruby installation.
+-  With =Pathname= you can access the class methods of =File= and =Dir=
+   on the instance object. E.g.
+
+#+BEGIN_SRC ruby
+    irb :001 > require 'pathname'
+     # => true
+    irb :002 > f = File.new("simple_file.txt", "r")
+     # => #<File:simple_file.txt>
+    irb :003 > pn = Pathname.new(f)
+     # => #<Pathname:simple_file.txt>
+    irb :004> pn.extname
+     # => ".txt"
+    irb :005 > File.extname("simple_file.txt")
+     # => ".txt"
+#+END_SRC
+
+-  Another example with =Pathname=:
+
+#+BEGIN_SRC ruby
+    irb :001 > d = Dir.new(".")
+    # => #<Dir:.>
+    irb :02 > while file = d.read do
+    irb :03 >     puts "#{file} has extension .txt" if File.extname(file) == ".txt"
+    irb :04?>   end
+    simple_file.txt has extension .txt
+    original_file.txt has extension .txt
+    # => nil
+#+END_SRC
+
+-  We can also do this using =Pathname=:
+
+#+BEGIN_SRC ruby
+    irb :002 > pn = Pathname.new(".")
+    irb :003 > pn.entries.each { |f| puts "#{f} has extension .txt" if f.extname == ".txt" }
+    simple_file.txt has extension .txt
+    original_file.txt has extension .txt
+    # => [#<Pathname:simple_file.txt>, #<Pathname:cultures.json>, #<Pathname:ruby_book>, #<Pathname:articles.xml>, #<Pathname:chair.rb>, #<Pathname:.git>, #<Pathname:original_file.txt>, #<Pathname:feedzilla.json>, #<Pathname:slashdot>, #<Pathname:articles.json>, #<Pathname:..>, #<Pathname:.>]
+#+END_SRC
+
+** Working with file formats - CSV, Excel, JSON, XML/HTML
+
+-  Read about the gem *Nokogiri* to work with XML files. Install and use
+   with =require nokogiri=.
+-  Ruby supports how to work with JSON files. Read about it in the
+   documentation. Use with =require json=.
+-  Ruby also supports CSV files with the built-in =CSV= class. Use with
+   =require json=.
+-  For Excel files, we can use the gem =axlsx=. Read about it. Install
+   and use with =require axlsx=.
+
+* More Stuff!
+
+** Regex
+
+-  Regular expressions in Ruby are surrounded by =/ /=.
+-  We can use the ==~= operator to see if we have a match in our regular
+   expression. The following example will check if the string contains
+   the letter "b". If it does, it returns the index of the first match,
+   otherwise returns =nil=.
+
+#+BEGIN_SRC ruby
+    "powerball" =~ /b/
+    # => 5
+#+END_SRC
+
+-  Since 5 in the example above evaluates to =true=, we can use it as a
+   boolean to check for matches. Example:
+
+#+BEGIN_SRC ruby
+    # boolean_regex.rb
+
+    def has_a_b?(string)
+      if string =~ /b/
+        puts "We have a match!"
+      else
+        puts "No match here."
+      end
+    end
+
+    has_a_b?("basketball")
+    has_a_b?("football")
+    has_a_b?("hockey")
+    has_a_b?("golf")
+
+    # This will print out
+
+    We have a match
+    We have a match
+    No match here.
+    No match here.
+#+END_SRC
+
+-  Similarly, we can use the =match= method instead of ==~=. E.g.
+
+#+BEGIN_SRC ruby
+    /b/.match("powerball")
+    # => #<MatchData "b">
+#+END_SRC
+
+-  Since the =MatchData= object that is returned if there is a match
+   evaluates to =true= as well, we can use it in a similar way:
+
+#+BEGIN_SRC ruby
+    # boolean_matchdata.rb
+
+    def has_a_b?(string)
+      if /b/.match(string)
+        puts "We have a match!"
+      else
+        puts "No match here."
+      end
+    end
+
+    has_a_b?("basketball")
+    has_a_b?("football")
+    has_a_b?("hockey")
+    has_a_b?("golf")
+#+END_SRC
+
+** Blocks and Procs
+
+-  Blocks are like methods that are saved for later used. Just like a
+   method, it can also take arguments.
+-  Examples of blocks:
+
+#+BEGIN_SRC ruby
+    # Blocks and yielding
+
+    def take_block(&block)
+      block.call
+    end
+
+    take_block do
+      puts "Block being called in the method!"
+    end
+
+
+    # The &block has to be the last parameter in the method definition
+    def get_name(name, &block)
+      puts "We are inside the block"
+      block.call(name)
+      name
+    end
+
+    # Same can be accomplished with Yield
+
+    def get_name2(name)
+      puts "We are inside block 2"
+      yield(name)
+      name
+    end
+
+    my_name = get_name("Ivan") { |x| puts "cool name, #{x}" }
+    my_name2 = get_name2("Duran") { |x| puts "cool name, #{x}" }
+
+    # It is possible to assign this two variables because name is the last
+    # line in the method, so the methods are returning the name variable
+    p my_name   # => "Ivan"
+    p my_name2  # => "Duran"
+#+END_SRC
+
+-  Procs are blocks that are wrapped in a proc object and stored in a
+   variable to be passed around.
+-  Examples:
+
+#+BEGIN_SRC ruby
+    # Proc example
+
+    talk = Proc.new do 
+      puts "I am talking."
+    end
+
+    talk.call
+
+    # Example passing arguments
+
+    talk = Proc.new do |name|
+      puts "I am talking to #{name}."
+    end
+
+    talk.call "Ivan"
+    # or,
+    talk.call("Duran")
+
+    # Example of passing a Proc into a method
+
+    proc = Proc.new do |number|
+      puts "#{number}. Proc being called in the method!"
+    end
+
+    def take_proc(proc)
+      [1, 2, 3, 4, 5].each do |number|
+        proc.call number
+      end
+    end
+
+    take_proc(proc)
+
+    # More than one argument
+
+    test = Proc.new do |a, b|
+      product = a*b
+      puts "The product of #{a} and #{b} is #{product}"
+    end
+
+    test.call(2, 3)
+
+
+    # Examples from http://docs.ruby-lang.org/en/2.0.0/Proc.html
+
+    def gen_times(factor)
+      return Proc.new {|n| n*factor }
+    end
+
+    times3 = gen_times(3)
+    times5 = gen_times(5)
+
+    p times3.call(12)               #=> 36
+    p times5.call(5)                #=> 25
+    p times3.call(times5.call(4))   #=> 60
+#+END_SRC
+
+-  Procs gives us the added flexibility to be able to reuse blocks in
+   more than one place without having to type them out every time.
+
+-  Another example from codecademy.com
+
+#+BEGIN_SRC ruby
+    group_1 = [4.1, 5.5, 3.2, 3.3, 6.1, 3.9, 4.7]
+    group_2 = [7.0, 3.8, 6.2, 6.1, 4.4, 4.9, 3.0]
+    group_3 = [5.5, 5.1, 3.9, 4.3, 4.9, 3.2, 3.2]
+
+    # Complete this as a new Proc
+    over_4_feet = Proc.new do |item|
+        item >= 4
+    end
+
+    # Change these three so that they use your new over_4_feet Proc
+    can_ride_1 = group_1.select(&over_4_feet)
+    can_ride_2 = group_2.select(&over_4_feet)
+    can_ride_3 = group_3.select(&over_4_feet)
+#+END_SRC
+
+** Exception and Handling
+
+-  We use the exception class that has a syntactic structure using the
+   reserved words =begin=, =rescue=, and =end=. Example:
+
+#+BEGIN_SRC ruby
+    # Exception examples
+
+    begin
+      # perform some dangerous operation
+    rescue
+      # do this if operation fails
+      # for example, log the error
+    end
+
+    names = ['bob', 'joe', 'steve', nil, 'frank']
+
+    names.each do |name|
+      begin
+        puts "#{name}'s name has #{name.length} letters in it."
+      rescue
+        puts "Something went wrong!"
+      end
+    end
+
+
+    # One line example
+
+    zero = 0
+    puts "Before each call"
+    zero.each { |element| puts element  } rescue puts "Can't do that!"
+    puts "After each call"
+
+
+    # Division example
+
+    def divide(number, divisor)
+      begin
+        number / divisor
+      rescue ZeroDivisionError => e   # Saving the ZeroDivisionError object to a variable e.
+        puts e.message                # Using the message method that ZeroDivisionError has available.
+      end
+    end
+
+    p divide(16, 4)  # => 4
+    p divide(4, 0)   # => divided by 0 # => nil
+    p divide(14, 7)  # => 2
+#+END_SRC
+
+** Exercises (More Stuff)
+
+1. Write a program that checks if the sequence of characters "lab"
+   exists in the following strings. If it does exist, print out the
+   word.
+
+   "laboratory", "experiment", "Pans Labyrinth", "elaborate", "polar
+   bear".
+
+2. What will the following program print to the screen? What will it
+   return?
+
+   #+BEGIN_SRC ruby
+       def execute(&block)
+         block
+       end
+
+       execute { puts "Hello from inside the execute method" }
+   #+END_SRC
+
+3. What is exception handling and what problem does it solve?
+
+4. Modify the code in exercise 2 to make the block execute properly.
+
+5. Why does the following code...
+
+   #+BEGIN_SRC ruby
+       def execute(block)
+         block.call
+       end
+
+       execute { puts "Hello from inside the execute method" }
+   #+END_SRC
+
+   Give us the following error when we run it?
+
+   #+BEGIN_SRC ruby
+       block.rb1:in `execute': wrong number of arguments (0 for 1) (ArgumentError)
+       from test.rb:5:in `<main>'
+   #+END_SRC
+
+
