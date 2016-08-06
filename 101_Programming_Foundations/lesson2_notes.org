@@ -512,9 +512,150 @@ puts name           # => Jim
   "pass by value".
 - Some people call this /pass by reference of the value/ or /call sharing/.
 - The important thing to remember is that
+
 #+BEGIN_QUOTE
 when an operation within the method mutates the caller, it will affect the
 original object
 #+END_QUOTE
+
+* Coding Tips 2
+
+** Using new lines to organize code
+
+- Use new lines to separate the different concerns in the code.
+
+#+BEGIN_SRC ruby
+# bad
+
+name = ''
+puts "Enter your name: "
+loop do
+  name = gets.chomp
+  break unless name.empty?
+  puts "That's an invalid name. Try again:"
+end
+puts "Welcome #{name}!"
+puts "What would you like to do?"
+
+# better
+
+name = ''
+
+puts "Enter your name: "
+loop do
+  name = gets.chomp
+  break unless name.empty?
+  puts "That's an invalid name. Try again:"
+end
+
+puts "Welcome #{name}!"
+puts "What would you like to do?"
+#+END_SRC
+
+** Should a method return or display?
+
+- Understand whether a method returns a value, or has side effects, or both.
+- In general, if a method has both side effects and a meaningful return value,
+  it's a red flag. Try to avoid writing methods that do this, as it will be very
+  difficult to use these methods in the future.
+
+** Name methods appropriately
+
+- If you have methods that output values, then preface those methods with
+  =display_= or =print=. This will spare you looking at the method's
+  implementation every time you are going to use it.
+- A method should do one thing and be named properly.
+- You should be able to use a method called =total= and understand that it returns
+  a value, and a method called =print_total= returns =nil=, without looking at the
+  implementation of either. On the other hand, if there's a method called
+  =total!=, then it's a sign that there is some side effect somewhere.
+
+** Don't mutate the caller during iteration
+
+- Although you can mutate individual elements within a collection, like in the
+  following example:
+
+#+BEGIN_SRC ruby
+words = %w(scooby doo on channel two)
+words.each {|str| str << '!'}
+puts words.inspect        # => ["scooby!", "doo!", "on!", "channel!", "two!"]
+#+END_SRC
+
+- Do not mutate the collection itself. Otherwise you might get unexpected
+  behaviors like this:
+
+#+BEGIN_SRC ruby
+words = %w(scooby doo on channel two)
+words.each {|str| words.delete(str)}
+puts words.inspect        # => ["doo", "channel"]
+#+END_SRC
+
+- Even though were expecting an empty array, we didn't get that. Why??
+
+
+** Variable shadowing
+
+- It takes place when you choose a local variable in an inner scope that shares
+  the same name as an outer scope.
+- *It essentially prevents you from accessing the outer scope variables*
+- Example:
+
+#+BEGIN_SRC ruby
+name = 'johnson'
+
+['kim', 'joe', 'sam'].each do |name|
+  # uh-oh, we cannot access the outer scoped "name"!
+  puts "#{name} #{name}"
+end
+#+END_SRC
+
+- *Rubocop* will catch this error of assigning a block variable that is
+  identical to an outer scope variable.
+
+** Don't use assignment in a conditional
+
+- Example:
+
+#+BEGIN_SRC ruby
+numbers = [1, 2, 3, 4, 5]
+
+while num = numbers.shift
+  puts num
+end
+#+END_SRC
+
+- The =shift= method removes and returns the first element of an array. Once
+  there is nothing to remove, it returns =nil=. So this works as a loop
+  termination condition.
+- While this works, it is hard to read for other programmers or for you in the
+  future.
+- Did you mean ~num == numbers.shift~?
+- As a convention, if you must do this, wrap the assignment in parentheses so it
+  means that you did it on purpose. E.g. ~while (num = numbers.shift)~.
+- However, it is still recommended to avoid this.
+
+** Use underscore for unused parameters.
+
+- When you don't care about the variable you are iterating through in a block,
+  use a =_= for that parameter. Examples:
+
+#+BEGIN_SRC ruby
+names = ['kim', 'joe', 'sam']
+names.each { |_| puts "got a name!" }
+
+# or,
+
+names.each_with_index do|_, idx|
+  puts "#{idx+1}. got a name!"
+end
+#+END_SRC
+
+** Gain experience through struggling
+
+- It is less impactful to learn "best practices" without first learning why they
+  are best practices.
+- You must learn to be ok with struggling through the "bad" or sub-optimal
+  practices first. That's not wasting time, it is generating experience.
+- Do not memorize "best practices" but spend enough time understanding them.
 
 
