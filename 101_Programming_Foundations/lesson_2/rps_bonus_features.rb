@@ -1,41 +1,26 @@
 # rps_bonus_features.rb
 # Implement the RPS games adding the Lizard and Spock options
 
-PRINTED_CHOICES = %w((r)ock (p)aper (s)cissors (l)izard (S)pock)
-VALID_CHOICES = %w(r p s l S)
+WIN_CONDITIONS = { "r" => %w(s l),
+                   "p" => %w(r s),
+                   "s" => %w(p l),
+                   "l" => %w(p v),
+                   "v" => %w(s r) }
 
-def rock_wins?(p_ans_rock, p_ans_other)
-  (p_ans_rock == 'r' && (p_ans_other == 's' || p_ans_other == 'l'))
-end
+CHOICES = { "rock" => "r",
+            "paper" => "p",
+            "scissors" => "s",
+            "lizard" => "l",
+            "spock" => "v" }
 
-def paper_wins?(p_ans_paper, p_ans_other)
-  (p_ans_paper == 'p' && (p_ans_other == 'r' || p_ans_other == 'S'))
-end
-
-def scissors_win?(p_ans_scissors, p_ans_other)
-  (p_ans_scissors == 's' && (p_ans_other == 'p' || p_ans_other == 'l'))
-end
-
-def lizard_wins?(p_ans_lizard, p_ans_other)
-  (p_ans_lizard == 'l' && (p_ans_other == 'p' || p_ans_other == 'S'))
-end
-
-def spock_wins?(p_ans_spock, p_ans_other)
-  (p_ans_spock == 'S' && (p_ans_other == 's' || p_ans_other == 'r'))
-end
-
-def player1_win?(ans_player1, ans_player2)
-  rock_wins?(ans_player1, ans_player2) ||
-    paper_wins?(ans_player1, ans_player2) ||
-    scissors_win?(ans_player1, ans_player2) ||
-    lizard_wins?(ans_player1, ans_player2) ||
-    spock_wins?(ans_player1, ans_player2)
+def win?(piece, other)
+  WIN_CONDITIONS[piece].include?(other)
 end
 
 def display_results(answer_player, answer_computer)
-  if player1_win?(answer_player, answer_computer)
+  if win?(answer_player, answer_computer)
     "You won!"
-  elsif player1_win?(answer_computer, answer_player)
+  elsif win?(answer_computer, answer_player)
     "Computer won!"
   else
     "It's a tie!"
@@ -46,15 +31,15 @@ def prompt(message)
   puts("=> #{message}")
 end
 
-def add_result_player!(player, results)
-  results[player.to_sym] += 1
+def add_score_for_player!(player, score)
+  score[player.to_sym] += 1
 end
 
-def add_results!(answer_player, answer_computer, results)
-  if player1_win?(answer_player, answer_computer)
-    add_result_player!("player", results)
-  elsif player1_win?(answer_computer, answer_player)
-    add_result_player!("computer", results)
+def add_score!(answer_player, answer_computer, score)
+  if win?(answer_player, answer_computer)
+    add_score_for_player!("player", score)
+  elsif win?(answer_computer, answer_player)
+    add_score_for_player!("computer", score)
   end
 end
 
@@ -62,7 +47,7 @@ def valid_integer?(input)
   input =~ /^\d+$/ && input <= "5"
 end
 
-results = { player: 0, computer: 0 }
+score = { player: 0, computer: 0 }
 
 prompt("Welcome to ROCK PAPER SCISSORS SPOCK LIZARD game!")
 
@@ -83,42 +68,55 @@ loop do
   choice = ''
 
   loop do
-    prompt("Choose the initial letter of one of the following words:
-    #{PRINTED_CHOICES.join(', ')}")
-    choice = gets.chomp
+    prompt("Your choices are:")
+    CHOICES.each { |k, v| puts "#{v} for #{k}" }
 
-    if VALID_CHOICES.include?(choice)
+    print "Type one of the choices above: "
+    choice = gets.chomp.downcase
+
+    if CHOICES.values.include?(choice)
       break
     else
       prompt("That's not a valid choice.")
     end
   end
 
-  computer_choice = VALID_CHOICES.sample
+  computer_choice = CHOICES.values.sample
 
-  add_results!(choice, computer_choice, results)
+  add_score!(choice, computer_choice, score)
 
-  prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
+  choice_verbose = CHOICES.key(choice)
+  comp_choice_verbose = CHOICES.key(computer_choice)
+
+  prompt("You chose: #{choice_verbose}; Computer chose: #{comp_choice_verbose}")
 
   prompt(display_results(choice, computer_choice))
 
-  prompt("The score is:
-Player = #{results[:player]}, Computer = #{results[:computer]}")
+  prompt("The score is:\n" \
+         "Player = #{score[:player]}, Computer = #{score[:computer]}")
 
   winning_score = winning_score.to_i
 
-  if results[:player] < winning_score && results[:computer] < winning_score
-    prompt("Do you want to play again?")
-    answer = gets.chomp
+  if score[:player] < winning_score && score[:computer] < winning_score
+    prompt("Do you want to play again? (y/n)")
+    answer = ''
+    loop do
+      answer = gets.chomp
+      if answer.downcase.start_with?('y', 'n')
+        break
+      else
+        prompt("Please choose either y or n")
+      end
+    end
     break unless answer.downcase.start_with?('y')
   else
     break
   end
 end
 
-if results[:player] < winning_score && results[:computer] < winning_score
+if score[:player] < winning_score && score[:computer] < winning_score
   prompt("You have withdrawn, so I (the computer) win :D ")
-elsif results.key(winning_score) == :player
+elsif score.key(winning_score) == :player
   prompt("Congratulations, You have won! ;)")
 else
   prompt("Sorry, You lost, I (the computer) won :D")
