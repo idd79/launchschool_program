@@ -1,0 +1,69 @@
+#+TITLE: Lesson 3 Notes
+#+Author: Ivan A. Duran
+
+* Exercises: Easy 1
+
+- In the following example, the method =uniq= does not modify the original array, it only returns a new array with unique elements.
+
+- ~!=~ means 'not equal', ~? :~ is the ternary operator, ~!!<some object>~ turns any object into their boolean equivalent, ~!<some object>~ turns any object into the opposite of their boolean.
+
+- The method =<string>.gsub(pattern, replacement)= replaces pieces of the string with others. Use =gsub!= to modify the original string.
+
+- The methods ~<array>.delete_at(index)~ and ~<array>.delete(obj)~ mutate the caller. Both return the deleted element.
+
+- To verify that a range contains a number, we can use either =include?= or =cover?=. The latter is specific to range objects. E.g. ~(10..100).cover?(42)~.
+
+- We can use ~<<~ to concatenate strings (e.g. ~"hello " << "world!") just like the =+= operator. Also, we can use the =prepend= method to add strings at the beginning of another string. E.g. ~"world!".prepend("Hello ")~.
+
+- In order to convert a nested array into an un-nested one, use the method =flatten= or =flatten!=.
+
+- To keep only one key and value from a hash, and then convert it into and array and un-nested it, use: ~flintstones.keep_if { |k, v| k == "Barney"}.to_a.flatten!~. Similarly, we can just use ~flintstones.assoc("Barney")~
+
+- Iterate through the items of an array with their respective indexes using the method ~each.with_index~.
+
+
+* Exercises: Easy 2
+
+- To check if a key is present at a hash, use =include?()=, =member?()=, =has_key?()=, or =key?()=
+
+- To add up all the elements in an array, use ~array.inject(:+)~. Similarly, we can implement any binary operation with =inject= such as ~array.inject(:*)~. Also see the method =reduce=. Both are from the =Enumerable= module.
+
+- Use =select=, =reject=, or =keep_if= methods to filter items in a hash or array.
+
+- Use different methods for capitalization, such as:
+  - =string.capitalize=
+  - =string.swapcase=
+  - =string.downcase=
+  - =string.upcase=
+
+- Use the method =hash.merge(another_hash)= not add the components of =another_hash= to =hash=.
+
+- To pick out the minimum value from a hash, use: ~hash.values.min~ (use =max= instead to pick the maximum value).
+
+- To find the index in an array of a particular string, for example that starts with "Be":
+
+#+BEGIN_SRC ruby
+flintstones.index_at("Be")
+#+END_SRC
+
+
+* Exercises: Easy 3 
+
+- We can write an array of strings using ~%w(hello hi hola)~.
+
+- To add an element to an array we can use the operator ~<<~, and also the methods =array.push()= or =array.concat()=
+
+- To delete parts of a string we can use the =slice= and =slice!= methods. For example:
+
+#+BEGIN_SRC ruby
+array.slice!(0, array.index("house"))
+#+END_SRC
+
+- The example above will return the deleted fragment (i.e. from index 0 up to the index where "house" starts), and mutates the array leaving it with anything after starting with "house".
+
+- Use the method =string.scan(pattern)= to get an array of the matches in string according to =pattern=, then we can count how many occurrences where found with =array.count=. So, the whole statement becomes ~string.scan(pattern).count~.
+
+- In order to center a string we can use the method =string.center(width)=.
+
+
+* Exercises: Medium 1
