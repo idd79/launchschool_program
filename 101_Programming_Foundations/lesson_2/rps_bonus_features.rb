@@ -1,11 +1,11 @@
 # rps_bonus_features.rb
 # Implement the RPS games adding the Lizard and Spock options
 
-WIN_CONDITIONS = { "r" => %w(s l),
-                   "p" => %w(r s),
-                   "s" => %w(p l),
-                   "l" => %w(p v),
-                   "v" => %w(s r) }
+WIN_CONDITIONS = { "rock" => %w(scissors lizard),
+                   "paper" => %w(rock spock),
+                   "scissors" => %w(paper lizard),
+                   "lizard" => %w(paper spock),
+                   "spock" => %w(scissors rock) }
 
 CHOICES = { "rock" => "r",
             "paper" => "p",
@@ -17,7 +17,7 @@ def win?(piece, other)
   WIN_CONDITIONS[piece].include?(other)
 end
 
-def display_results(answer_player, answer_computer)
+def game_ending_message(answer_player, answer_computer)
   if win?(answer_player, answer_computer)
     "You won!"
   elsif win?(answer_computer, answer_player)
@@ -44,7 +44,9 @@ def add_score!(answer_player, answer_computer, score)
 end
 
 def valid_integer?(input)
-  input =~ /^\d+$/ && input <= "5"
+  input =~ /^\d+$/ && input.to_i <= 5
+  # or,
+  # input =~ /^\d{1}$/ && input <= "5"
 end
 
 score = { player: 0, computer: 0 }
@@ -81,16 +83,14 @@ loop do
     end
   end
 
-  computer_choice = CHOICES.values.sample
+  choice = CHOICES.key(choice)
+  computer_choice = CHOICES.keys.sample
 
   add_score!(choice, computer_choice, score)
 
-  choice_verbose = CHOICES.key(choice)
-  comp_choice_verbose = CHOICES.key(computer_choice)
+  prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
 
-  prompt("You chose: #{choice_verbose}; Computer chose: #{comp_choice_verbose}")
-
-  prompt(display_results(choice, computer_choice))
+  prompt(game_ending_message(choice, computer_choice))
 
   prompt("The score is:\n" \
          "Player = #{score[:player]}, Computer = #{score[:computer]}")
