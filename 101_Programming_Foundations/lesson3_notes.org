@@ -13,7 +13,7 @@
 
 - To verify that a range contains a number, we can use either =include?= or =cover?=. The latter is specific to range objects. E.g. ~(10..100).cover?(42)~.
 
-- We can use ~<<~ to concatenate strings (e.g. ~"hello " << "world!") just like the =+= operator. Also, we can use the =prepend= method to add strings at the beginning of another string. E.g. ~"world!".prepend("Hello ")~.
+- We can use ~<<~ to concatenate strings (e.g. ~"hello " << "world!") just like the =+= operator. However, keep in mind that =+= won't mutate the caller while =<<= will. Also, we can use the =prepend= method to add strings at the beginning of another string. E.g. ~"world!".prepend("Hello ")~.
 
 - In order to convert a nested array into an un-nested one, use the method =flatten= or =flatten!=.
 
@@ -51,7 +51,7 @@ flintstones.index_at("Be")
 
 - We can write an array of strings using ~%w(hello hi hola)~.
 
-- To add an element to an array we can use the operator ~<<~, and also the methods =array.push()= or =array.concat()=
+- To add an element to an array we can use the operator ~<<~, and also the methods =array.push()= or =array.concat()=, or ~array + [new_element]~.
 
 - To delete parts of a string we can use the =slice= and =slice!= methods. For example:
 
@@ -67,3 +67,122 @@ array.slice!(0, array.index("house"))
 
 
 * Exercises: Medium 1
+
+- To iterate a given block a certain number of times, we can use:
+
+#+BEGIN_SRC ruby
+10.times { |i| puts " " * i + string }
+#+END_SRC
+
+- We can use a range such as =(0..17)= in a case statement. E.g.:
+
+#+BEGIN_SRC ruby
+munsters.each do |_, v|
+  case v["age"]
+  when (0..17)
+    v["age_group"] = "kid"
+  when 18..64
+    v["age_group"] = "adult"
+  else
+    v["age_group"] = "senior"
+  end
+end
+#+END_SRC
+
+- Remember that local variables cannot be accessed inside the scope of a method, therefore the following would give an error:
+
+#+BEGIN_SRC ruby
+limit = 15
+
+def fib(first_num, second_num)
+  while second_num < limit
+    sum = first_num + second_num
+    first_num = second_num
+    second_num = sum
+  end
+  sum
+end
+
+result = fib(0, 1)
+puts "result is #{result}"
+#+END_SRC
+
+- To fix the code above we could for example make =limit= as an additional argument to the method =fib=.
+
+
+* Exercises: Medium 2
+
+- We can split a string using a regex. For example ~"Hello World.".split(/\W/)~ will return the array =["Hello", "World"]=. Notice that =\W= in the regex means any non-word character.
+
+- The following method will mutate the original hash given as parameter:
+
+#+BEGIN_SRC ruby
+def mess_with_demographics(demo_hash)
+  demo_hash.values.each do |family_member|
+    family_member["age"] += 42
+    family_member["gender"] = "other"
+  end
+end
+#+END_SRC
+
+- Method calls can take expressions as arguments. Example:
+
+#+BEGIN_SRC ruby
+def rps(fist1, fist2)
+  if fist1 == "rock"
+    (fist2 == "paper") ? "paper" : "rock"
+  elsif fist1 == "paper"
+    (fist2 == "scissors") ? "scissors" : "paper"
+  else
+    (fist2 == "rock") ? "rock" : "scissors"
+  end
+end
+
+# What is the result of the following call?
+
+puts rps(rps(rps("rock", "paper"), rps("rock", "scissors")), "rock")
+#+END_SRC
+
+- The result of the call above will be ~"paper"~.
+
+
+* Exercises: Medium 3
+
+- The ~String#+=~ operation CREATES A NEW STRING OBJECT inside a method, so the method forgets about the string object given as parameter.
+
+- The ~Array#<<~ operation, on the other hand, when used inside the method, uses the same object given as parameter and modifies the original array. So basically, this operation appends a new element to the original element even though is being appended inside the method.
+
+- We can get the id number assigned by Ruby to an object with the method ~object.object_id~.
+
+
+* Exercises: Hard 1  
+
+- Typically, when you reference an uninitialized variable, Ruby will raise an exception, stating that it’s undefined. However, when you initialize a local variable within an ~if~ block, even if that if block doesn’t get executed, the local variable is initialized to =nil=.
+
+- The ~String#<<~ method modifies the object that called it.
+
+- We can clone an object to just use the value and avoid modifying later with some method like ~<<~. Example: ~informal_greetings[:a].clone~.
+
+- We can also use string concatenation such as ~informal_greeting = informal_greeting + ' there'~, which returns a new =String= object instead of modifying the original object.
+
+- The string method ~gsub!~, if used inside a method, will still mutate the caller. The assignment operator ~=~ will not mutate an out of scope variable if used inside a method. E.g.:
+
+#+BEGIN_SRC ruby
+def mess_with_vars(one, two, three)
+  one = "two"
+  two = "three"
+  three = "one"
+end
+
+one = "one"
+two = "two"
+three = "three"
+
+mess_with_vars(one, two, three)
+
+puts "one is: #{one}"
+puts "two is: #{two}"
+puts "three is: #{three}"
+#+END_SRC
+
+- The above code will still print out the value of the variables assigned before the method call ~mess_with_vars~.
