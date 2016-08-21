@@ -1,0 +1,10 @@
+#+TITLE: Lesson 4 Notes
+#+Author: Ivan A. Duran
+
+* Tic Tac Toe game
+
+- Use =!!= at the beginning of a string to convert it into a boolean. If it is =nil=, it will convert it into =false=, otherwise, it will convert it into =true=.
+
+- We can disable Rubocop for a particular offense. Just add a comment line right before the offense with ~#rubocop:disable Metrics/MethodLength~, and right after the offense enable it back in with ~#rubocop:enable Metrics/MethodLength~. Make sure to change the name of the offense (MethodLength) in this case for each particular case.
+
+- Use the =splat= operator =*object= for example with the array ~a = [1, 2, 3]~ to use use the element inside the array. Example, say we need to get the values at some keys from a hash (keys 1, 2, and 3) and I have those keys in an array ~a = [1, 2, 3]~. So I can get those values with ~hash.values_at(*a)~ which is the same as ~hash.values_at(1, 2, 3)~.
