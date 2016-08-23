@@ -37,16 +37,9 @@ def computer_chooce(current_board, mark = 'X')
 end
 
 def win_condition?(brd, mark = 'X')
-  condition = false
-  winning_cases.each do |item|
-    if brd.values_at(*item).count(mark) == 3
-      condition = true
-      break
-    else
-      next
-    end
+  winning_cases.any? do |item|
+    brd.values_at(*item).count(mark) == 3
   end
-  condition
 end
 
 def annotate_board!(hash, input, mark = "X")
