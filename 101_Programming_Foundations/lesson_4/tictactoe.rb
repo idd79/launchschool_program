@@ -255,7 +255,6 @@ loop do
     end
 
     break unless answer.downcase.start_with?('y')
-    current_player = initial_player
   else
     break
   end
