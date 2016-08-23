@@ -1,7 +1,5 @@
 # tictactoe_ls_version.rb
 
-require 'pry'
-
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                 [[1, 5, 9], [3, 5, 7]]
@@ -72,7 +70,7 @@ def detect_winner(brd)
     #   return 'Computer'
     # end
     if brd.values_at(*line).count(PLAYER_MARKER) == 3
-      reurn 'Player'
+      return 'Player'
     elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
       return 'Computer'
     end
