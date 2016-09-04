@@ -61,7 +61,7 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def clear_system
+def clear_screen
   system("clear") || system("cls")
 end
 
@@ -76,7 +76,7 @@ def ask_player_loop(question, *options)
     answer = ask_player(question)
 
     break if answer.downcase.start_with?(*options)
-    clear_system
+    clear_screen
     prompt "That's not a valid choice. Try again."
   end
   answer
@@ -108,7 +108,7 @@ def prompt_player_won(brd, player)
 end
 
 def prompt_its_a_tie(brd)
-  clear_system
+  clear_screen
   display_board(brd)
   prompt("Oh! It's a tie.")
 end
@@ -143,7 +143,7 @@ def human_plays(current_brd, status_brd, mark)
     choice = gets.chomp
 
     break if valid_choice?(status_brd.values, choice)
-    clear_system
+    clear_screen
     prompt("You entered a wrong value! Please try again...")
   end
   annotate_board!(current_brd, choice, mark)
@@ -161,7 +161,7 @@ def computer_plays(brd, status_brd, players_marker, computers_marker, level)
   prompt_players_chose('Computer', computers_choice)
 end
 
-clear_system
+clear_screen
 puts "Welcome to Tic Tac Toe game"
 
 score = { human: 0, computer: 0 }
@@ -172,7 +172,7 @@ loop do
                              "(choose a number from 1 to 5):")
 
   break if valid_winning_score?(winning_score)
-  clear_system
+  clear_screen
   prompt("That's not a valid choice.")
 end
 
@@ -195,7 +195,7 @@ loop do
   players_mark = ask_player("Select your marker: 'X' or 'O'")
 
   break if valid_mark?(players_mark)
-  clear_system
+  clear_screen
   prompt "That's not a valid choice"
 end
 
@@ -206,7 +206,7 @@ computers_mark =
 
 # Main loop
 loop do
-  clear_system
+  clear_screen
   board = initialize_board
   status_board = initial_choices_board
 
@@ -220,7 +220,7 @@ loop do
   loop do
     if current_player == 'human'
       human_plays(board, status_board, players_mark)
-      clear_system
+      clear_screen
     else
       computer_plays(board, status_board, players_mark, computers_mark, level)
     end
