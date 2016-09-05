@@ -55,11 +55,12 @@ def total(cards)
 end
 
 def ask_player_hit_or_stay
+  right_ans = ['h', 'hit', 's', 'stay']
   ans = ''
   loop do
     prompt "Do you want to 'hit' or 'stay'?"
     ans = gets.chomp
-    break if ans.downcase.start_with?('h', 's')
+    break if right_ans.include?(ans)
     prompt "That's not a valid choice. Please try again..."
   end
   ans = ans.downcase.start_with?('h') ? 'hit' : 'stay'
@@ -82,11 +83,12 @@ def busted_or_21_msg(cards, person)
 end
 
 def play_next_round?
+  right_ans = ['y', 'yes', 'n', 'no', 'nop']
   answer = ''
   loop do
     prompt_with_space "Do you want to play the next round?"
     answer = gets.chomp
-    break if answer.downcase.start_with?('y', 'n')
+    break if right_ans.include?(answer)
     prompt "Please answer 'yes' or 'no'..."
   end
   answer.downcase.start_with?('y')
@@ -111,6 +113,10 @@ end
 def display_score(score)
   prompt "The score is: " \
          "Player = #{score['player']}/5; Dealer = #{score['dealer']}/5"
+end
+
+def busted_or_21?(cards)
+  busted?(cards) || got_win_score?(cards)
 end
 
 def display_final_msg
@@ -172,7 +178,7 @@ loop do
     display_cards(players_cards, 'Player')
   end
 
-  if busted?(players_cards) || got_win_score?(players_cards)
+  if busted_or_21?(players_cards)
     busted_or_21_msg(players_cards, 'Player')
     add_score_busted_or_21(score_board, players_cards, dealers_cards)
     break if score_board.values.include?(5)
@@ -194,7 +200,7 @@ loop do
     dealers_cards << deck.pop
   end
 
-  if busted?(dealers_cards) || got_win_score?(dealers_cards)
+  if busted_or_21?(dealers_cards)
     busted_or_21_msg(dealers_cards, 'Dealer')
     add_score_busted_or_21(score_board, players_cards, dealers_cards)
     break if score_board.values.include?(5)
