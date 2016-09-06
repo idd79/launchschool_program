@@ -94,11 +94,11 @@ def play_next_round?
   answer.downcase.start_with?('y')
 end
 
-def add_score_busted_or_21(score, players_cards, dealers_cards)
-  if busted?(dealers_cards) || got_win_score?(players_cards)
-    score['player'] += 1
-  elsif busted?(players_cards) || got_win_score?(dealers_cards)
-    score['dealer'] += 1
+def add_score_busted_or_21(score, cards, main_player, other_player)
+  if busted?(cards)
+    score[other_player] += 1
+  elsif got_win_score?(cards)
+    score[main_player] += 1
   end
 end
 
@@ -180,7 +180,7 @@ loop do
 
   if busted_or_21?(players_cards)
     busted_or_21_msg(players_cards, 'Player')
-    add_score_busted_or_21(score_board, players_cards, dealers_cards)
+    add_score_busted_or_21(score_board, players_cards, 'player', 'dealer')
     break if score_board.values.include?(5)
     break unless play_next_round?
     clear_screen
@@ -202,7 +202,7 @@ loop do
 
   if busted_or_21?(dealers_cards)
     busted_or_21_msg(dealers_cards, 'Dealer')
-    add_score_busted_or_21(score_board, players_cards, dealers_cards)
+    add_score_busted_or_21(score_board, dealers_cards, 'dealer', 'player')
     break if score_board.values.include?(5)
     break unless play_next_round?
     clear_screen
