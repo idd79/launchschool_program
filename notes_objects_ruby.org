@@ -1,0 +1,282 @@
+#+TITLE: How Ruby Manipulates Variables and Objects
+#+Author: Ivan A. Duran
+
+These notes are based on (or copied from, verbatim in many cases) a series of three articles by *Pete Hanson* from Launchschool, in which he explains how Ruby manipulates variables and objects in a very detailed way. At the end of the three articles, we will be able to conclude, among other things, whether Ruby pass by reference or by value.
+
+Read the first of the articles [[https://launchschool.com/blog/references-and-mutability-in-ruby][here]].
+
+* Variable references and mutability of ruby objects
+
+** Immutable objects
+
+- In Ruby, numbers and boolean values are immutable.
+- Also, =nil= objects and ~Range~ objects are immutable.
+- This means that there are no methods for these objects that can alter its state.
+- Any =Class= can establish itself as immutable by simply not providing methods that alter its state.
+
+** Mutable objects
+
+- Most objects in Ruby are mutable. That means that there are some methods that can modify them.
+- For example, lets say we assign an array to =a= with ~a = %w(a b c)~, and then we modify one of the elements with say 
+#+BEGIN_SRC ruby
+a[1] = '-'
+#+END_SRC
+then the object that =a= references is still the same.
+- Strings and other collection classes (e.g. arrays, and hashes) are similar in the way they behave. Variables reference the collection (or String), and the collection contains references to the actual objects in the collection. Strings are a little bit different — it’s not really necessary to have separate objects for each character — but they act in a similar way.
+- Several Array methods, such as =#delete=, =#fill=, and =#insert= mutate the original object without creating a new one.
+
+** A brief introduction to object passing
+
+- When you pass an object to a method as an argument, the method can in theory either modify the object or leave it unmodified.
+- Whether or not a method can modify an object as an argument, depends whether or not the object is mutable or immutable, and also on how the argument is passed to the method.
+- Some languages make copies of method arguments, and pass those copies to the method. Since they are copies, the original object can't be modified. Objects passed to method in this way are /passed by value/, and the language is said to be /pass by value/.
+- Other languages pass references to the method instead, and so the reference (like an alias) can be used to modify the original object, given that the object is mutable. This is called /pass by reference/.
+
+** Developing a mental model
+
+- Pass by value, as you’ll recall, means copying the original objects, so the original object cannot be modified. Since immutable objects cannot be changed, they act like Ruby passes them around by value. Example:
+
+#+BEGIN_SRC ruby
+def increment(a)
+  a = a + 1
+end
+
+b = 3
+puts increment(b)    # prints 4
+puts b               # prints 3
+#+END_SRC
+
+- Here, the numeric object 3 is immutable. You can reasonably say that =b= is not modified by #increment since =b= is passed by value to =#increment= where it is bound to variable =a=. Even though a is set to 4 inside the method, and returned to the caller, the original object referenced by =b= is untouched.
+- Mutable objects, on the other hand, can always be modified simply by calling one of their mutating methods. They act like Ruby passes them around by reference; it isn’t necessary for a method to modify an object that is passed by reference, only that it can modify the object.
+- Pass by reference means that only a reference to an object is passed around; the variables used inside a method are bound to the original objects. This means that the method is free to modify those objects. Example:
+
+#+BEGIN_SRC ruby
+def append(s)
+  s << '*'
+end
+
+t = 'abc'
+puts append(t)    # prints abc*
+puts t            # prints abc*
+#+END_SRC
+
+- Here, the String object =abc= is mutable. You can reasonably say that =t= is modified by =#append= since =t= is passed by reference to =#append= where it is bound to variable =s=. When =s= is modified by append, it modifies the same object referenced by =t=, so upon return from the method, =t= still refers to the original (albeit modified) String object.
+
+** Conclusion
+
+- In this article we have seen that in Ruby, variables are just references to objects in memory.
+- Multiple variables can reference the same object, so modifying an object though a given variable name will be reflected in every other variable that is bound to that object.
+- Assignment or reassignment of a variable merely changes the binding to another object, without modifying the original object it was assigned to.
+- We’ve established a mental model that says that Ruby is pass by value for immutable objects, pass by reference otherwise.
+
+* Mutating and Non-Mutating Methods in Ruby
+
+- This second article (link [[https://launchschool.com/blog/mutating-and-non-mutating-methods][here]]) focuses on how objects are passed around in a Ruby program.
+- As mentioned in the first article, variables don't actually contain values, but serve as references to objects.
+
+** Mutating and Non-mutating methods
+
+- Mutating method change something, non-mutating methods do not.
+- All methods are non-mutating with respect to immutable objects.
+- Assignment (~=~) is Non-mutating. It just tells Ruby to bind an object with to variable.
+- Study the following two pieces of code and decide what happens to both =s= and =t= after running it:
+
+#+BEGIN_SRC ruby
+def fix(value)
+  value.upcase!
+  value.concat('!')
+  value
+end
+
+s = 'hello'
+t = fix(s)
+#+END_SRC
+
+- In the above example, =s= and =t= will be referencing the same original object created when =s= was initially assigned, but the object will be changed or mutated to ~'HELLO!'~.
+- Second example:
+
+#+BEGIN_SRC ruby
+def fix(value)
+  value = value.upcase
+  value.concat('!')
+end
+
+s = 'hello'
+t = fix(s)
+#+END_SRC
+
+- In this case, a new object is created when =value= is reassigned inside the method. Therefore, at the end, =t= will be referencing a new object "HELLO!", while =s= will still be referencing the same unchanged object ='hello'=.
+- Therefore, we can say that assignment always binds the target variable on the left hand side of the ~=~ to the object referenced by the right hand side. The object originally referenced by the target variable is never modified.
+  - The same holds for other assignment operators such as ~+=~, ~*=~, and ~%=~. None of these operators mutate their operands.
+  - However, be careful with assignments that include a mutating method. For example, if we use in the code above instead ~value = value.upcase!~, the object that initially is assigned to ~value~ will still be the same but now modified to 'HELLO'. The reason is that ~String#upcase!~ returns a reference to the original receiver, =value=.
+  - Consider the ~String#strip!~ method that removes leading and trailing whitespace from a String object:
+  
+#+BEGIN_SRC ruby
+>> s = '   hey   '
+=> "   hey   "
+
+>> s.object_id
+=> 70101479494960
+
+>> s.strip!
+=> "hey"
+
+>> s.object_id
+=> 70101479494960
+#+END_SRC
+
+- Here, we mutate the original String object; =s= references the same object both before and after =#strip= is called. Only the state of the object has been changed.
+- Many but not all methods that mutate their receiver use =!= as the last character of their name. For instance, =String#concat= is a mutating method, but it does not include a =!=. Also ~#[]=~, and ~#<<~, and setter methods.
+
+- Keep in mind that indexed assignments are mutating, such as those used by String, Hash, and Array. Example:
+
+#+BEGIN_SRC ruby
+str[3] = 'x'
+array[5] = Person.new
+hash[:age] = 25
+#+END_SRC
+
+- In all the cases above, despite looking like assignments, are in fact mutating, that is, they modify the original object (String, Hash, or Array).
+- Example:
+
+#+BEGIN_SRC ruby
+>> a = [3, 5, 8]
+=> [3, 5, 8]
+
+>> a.object_id
+=> 70240541515340
+
+>> a[1].object_id
+=> 11
+
+>> a[1] = 9
+=> 9
+
+>> a[1].object_id
+=> 19
+
+>> a
+=> [3, 9, 8]
+
+>> a.object_id
+=> 70240541515340
+#+END_SRC
+
+- Here, we can see that we have mutated the Array a by assigning a new value to ~a[1]~, but have not created a new Array. ~a[1] = 9~ isn’t assigning anything to ~a~; it is assigning 9 to ~a[1]~; that is, this assignment changes ~a[1]~ so that it references the new object 9. You can see this by looking at ~a[1].object_id~ both before and after the assignment. Despite this change, though, ~a~ itself still points to the same (now mutated) Array we started with.
+
+- Concatenation is mutating (~#<<~). Example:
+
+#+BEGIN_SRC ruby
+>> s = 'Hello'
+=> "Hello"
+
+>> s.object_id
+=> 70101471465440
+
+>> s << ' World'
+=> "Hello World"
+
+>> s
+=> "Hello World"
+
+>> s.object_id
+=> 70101471465440
+#+END_SRC
+
+- Setters are also mutating. Setter invocation looks like this:
+
+#+BEGIN_SRC ruby
+person.name = 'Bill'
+person.age = 23
+#+END_SRC
+
+- This looks exactly like assignment, which is non-mutating, but, since these are setter calls, they actually mutate the object bound to =person=.
+
+** Refining the mental model
+
+- The mere fact that Ruby can have methods that mutate its arguments would seem to say that Ruby must pass by reference in some circumstances. Arguments that are passed by copy (value) cannot be mutated, so Ruby must use pass by reference when a method can mutate its arguments.
+- The presence of a =!= at the end of a method name is a pretty good indicator that a method mutates its receiver. However, not all mutating methods use the =!= convention. In such cases, you need to look at the source code of the method to see what operations are performed. Certain operations, like setters and indexed assignments should always be treated as mutating methods; others, like assignment and the assignment operators (~+=~, ~*=~, etc) are always non-mutating.
+- Immutable objects still seem to be passed by value, while mutable objects seemed to be passed by reference. What we have done, though, is show that assignment can break the binding between an argument name and the object it references.
+
+* Object passing in Ruby - Pass by reference or pass by value
+
+This is the last in a series of three articles discussing how Ruby manipulates variables and objects. We can find this article [[https://launchschool.com/blog/object-passing-in-ruby][here]].
+
+** What is object passing?
+
+- A developer needs to know what happens to the original objects passed to or returned from a method.
+- We also need to think about return values. Just as much as arguments are passed to methods, return values are passed by those methods back to the caller. So, return values must be included in our discussion of object passing.
+- Ruby also supports blocks, procs, and lambdas. All of these include the concepts of passing arguments and return values around. We will usually talk of passing objects to and from methods, but you should interpret that as referring to blocks, procs, and lambdas as well.
+
+** Evaluation strategies
+
+- *Strict evaluation* strategies are the most common ones when passing objects in a particular language.
+- With *strict evaluation*, every expression is evaluated and converted to an object before it is passed along to a method.
+- *Ruby uses strict evaluation exclusively*.
+- The two most common strict evaluation strategies are pass by value and pass by reference. These are knows as /object passing strategies/.
+- Most languages that employ strict evaluation use pass by value by default, but also make it possible to pass by reference when needed.
+- Few languages are purely pass by value or pass by reference.
+
+*** Pass by value
+
+- With pass by value, a copy of an object is created, and it is that copy that gets passed around. Therefore, it is not possible to change the original object.
+- *We could say that Ruby appears to pass by value, at least with respect to immutable values.*
+
+*** Pass by reference
+
+- With pass by reference, a /reference/ to an object is passed around. This establishes an alias between the argument and the original object: both the argument and the object refer to the same location in memory. If you modify the argument's state, you also modify the original object.
+- *Ruby appears to use pass by reference when passing mutable objects.*
+
+#+BEGIN_SRC ruby
+def uppercase(value) name.upcase!
+end
+
+name = 'William'
+uppercase(name)
+puts name               # WILLIAM
+#+END_SRC
+
+- In the method above, it modifies the =name= String through its alias =value=, so it looks like ruby is pass by reference here.
+
+** It references all the way down
+
+- We have said that Ruby 'appears' to be passed by value when passing immutable objects. Let's take a look at what happens exactly when we pass an immutable object:
+
+#+BEGIN_SRC ruby
+def print_id(number)
+  puts "In method object id = #{number.object_id}"
+end
+
+value = 33
+puts "Outside method object id = #{value.object_id}"
+print_id(value)
+
+# The code prints:
+
+Outside method object id = 67
+In method object id = 67
+#+END_SRC
+
+- Quite clearly, =number= and =value= reference the same object despite the object being immutable. We can also see that =value= was not copied. Thus, Ruby is not using pass by value. It appears to be using pass by reference.
+- At this point, therefore, it appears that Ruby is using pass by reference all the time.
+- You may be ready to ask “But, we can’t modify immutable objects! Isn’t that what pass by reference is all about?” The key here is that pass by reference isn’t limited to mutating methods. A non-mutating method can use pass by reference as well, so pass by reference can be used with immutable objects. There may be a reference passed, but the reference isn’t a guarantee that the object can be modified.
+
+** Pass by reference value
+
+- Can we say, therefore, that Ruby is pass by reference exclusively? Many people will tell you yes, and they wouldn't be wrong. There is however a /caveat/.
+- What happens then when we use assingment (~=~, or ~+=~, etc...)? In a pure pass by reference language, assignment would be a mutating operation. In Ruby, however, this is not the case, and the reason for this was discussed earlier...
+- ... Ruby variables and constants aren't objects, but are references to objects. Assignment merely changes which object is bound to a particular variable.
+- While we can change which object is bound to a a variable inside of a method, we can’t change the binding of the original arguments. We can change the objects if the objects are mutable, but the references themselves are immutable as far as the method is concerned.
+- This sounds a lot like pass by value. That is, Ruby appears to be making copies of the references, then passing those copies to the method. The method can use the references to modify the referenced object, but since the reference itself is a copy, the original reference cannot be changed.
+
+#+BEGIN_QUOTE
+"Given all of this, it’s not uncommon to just say that ruby is pass by reference value, pass by reference of the value, or pass by value of the reference. It’s all a little muddy, but the 3 terms mean essentially the same thing: ruby passes around copies of the references. In short, ruby is neither pass by value nor pass by reference, but instead employs a third strategy that blends the two strategies."
+#+END_QUOTE
+
+** Final mental model
+
+So, the answer to the question, is Ruby pass by reference or pass by value? has three acceptable answers:
+
+- *Pass by reference value* is probably the most accurate answer, but this isn't particularly helpful when trying to decide what will happen if a method modifies an argument.
+- *Pass by reference* is accurate so long as you account for assignment and immutability.
+- Ruby acts like *Pass by value* for immutable objects, *pass by reference* for mutable objects, is a reasonable answer when learning about Ruby, as long as you keep in mind that Ruby only /appears/ to act like this.
