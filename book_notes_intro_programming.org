@@ -1650,7 +1650,7 @@ argument.
 
 -  Use =File.open= with one of the open modes (careful with =w= or =w+=
    as if the file exists it overwrites everything in the file).
--  We can open a file for readinh only as well with =File.read= and
+-  We can open a file for reading only as well with =File.read= and
    =File.readlines=. =File.read= returns the whole contents of the file,
    while =File.readlines= reads the entire file based on individual
    lines and returns those lines in an array.
