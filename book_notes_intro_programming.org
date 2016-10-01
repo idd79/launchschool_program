@@ -55,7 +55,7 @@ treated as =false=. Example:
     #=> nil
 #+END_SRC
 
-However, there is a /caveat/ to this, as =false == nil= will return
+However, there is a /caveat/ to this, as ~false == nil~ will return
 =false=. That means that even tough they are treated as negative within
 an expression, they are not equivalent.
 
@@ -71,15 +71,15 @@ an expression, they are not equivalent.
     #=> 8.0
 #+END_SRC
 
--  if you compare =4 == 4.0= the results is =true=.
+-  if you compare ~4 == 4.0~ the results is =true=.
 
 ** Equality Comparison
 
 -  Achieved with the ==== operator.
 -  Comparing will return a *boolean object* (=ture=, or =false=)
--  It can be used with strings as well, ='foo' == 'bar' => false=,
-   ='foo' == 'foo' => false=
--  ='4' == 4= will return =false= as you are comparing two different
+-  It can be used with strings as well, ~'foo' == 'bar' => false~,
+   ~'foo' == 'foo' => false~
+-  ~'4' == 4~ will return =false= as you are comparing two different
    types.
 
 ** String concatenation
@@ -92,7 +92,7 @@ an expression, they are not equivalent.
 #+END_SRC
 
 -  If used between a string and a number, it will give you an error
-   (i.e., ='1' + 1=).
+   (i.e., ~'1' + 1~).
 
 ** Type Conversion
 
@@ -498,21 +498,21 @@ the book).
 ** Types of Variables
 
 -  Constants, declared by capitalizing every letter. E.g.
-   =MY_CONSTANT = "Hello World"=.
+   ~MY_CONSTANT = "Hello World"~.
 -  Global, declared by a dollar sign followed by the name of the
-   variable. E.g. =$var = "Hello World again"=.
+   variable. E.g. ~$var = "Hello World again"~.
 -  Class variables, declared with =@@=. E.g. =@@instances = 0=. These
    variables are accessible by instances of your class, as well as the
    class itself.
 -  Instance variables are declared with =@=. E.g.
-   =@var = "I am an instance variable"=. hese variables are available
+   ~@var = "I am an instance variable"~. hese variables are available
    throughout the current instance of the parent class. Instance
    variables can cross some scope boundaries, but not all of them. You
    will learn more about this when you get to OOP topics.
 -  Local variables, are the most common variables you will come across
    and obey all scope boundaries. These variables are declared by
    starting the variable name with neither $ nor @, as well as not
-   capitalizing the entire variable name. E.g. =var = "Hello last"=.
+   capitalizing the entire variable name. E.g. ~var = "Hello last"~.
 
 ** Exercises (Variables)
 
@@ -1335,7 +1335,7 @@ the book).
    =pop= removes the last one). The method =unshift= adds an element at
    the front of an array (just like =push= adds an element at the end).
 
-** to\_s
+** to_s
 
 -  The =:to_s= method is used to create a string representation of an
    array. It returns a new string without modifying the original array.
@@ -1728,7 +1728,7 @@ argument.
 -  Besides the =File= class we have been using in the above examples,
    there is also two other useful classes: =Dir= and =Pathname=.
 -  =File= and =Dir= you don't need to =require= them. =Pathname= you
-   might have to state at the top of your program =require 'pathname'=
+   might have to state at the top of your program ~require 'pathname'~
    depending of your Ruby installation.
 -  With =Pathname= you can access the class methods of =File= and =Dir=
    on the instance object. E.g.
