@@ -6,6 +6,7 @@ end
 
 def longest_sentence(text)
   hash = {}
+  # text.split(/\.|\?|!/).each do |line|
   text.split(/[.!?]/).each do |line|
     hash[line] = count_words(line)
   end
