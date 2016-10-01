@@ -1,0 +1,40 @@
+#+TITLE: Exercises - Ruby Basics
+#+Author: Ivan A. Duran
+
+* Reading Documentation 1
+
+- The =while= loop documentation is the ruby-doc.org website, under the "control expressions" link.
+
+- The =while= loop returns =nil=, unless =break= is used. On the other hand, =break=, returns the value of the argument if given.
+
+- Use "literals" to find documentation for things like how to write large numbers. E.g. ~1_987_654_321~.
+
+- Information about arguments can be found at http://ruby-doc.org/ by selecting the ~doc/syntax/calling_methods.rdoc~ link from the core API page. If you scroll down to the Default Positional Arguments section and start reading, you will learn that ruby lets you use default arguments in the middle of a number of positional arguments, much as we are doing here.
+
+
+* Reading Documentation 2
+
+- We can use the ~Array#insert~ method to insert the numbers 5, 6, and 7 between the elements with values 'c' and 'd' in the array ~%w(a b c d e)~.
+
+- The ~Array#bsearch~ method is used to search ordered Arrays more quickly than ~#find~ and ~#select~ can.
+
+
+* Variable scope
+
+- An example of shadowing:
+
+#+BEGIN_SRC ruby
+a = 7
+array = [1, 2, 3]
+
+array.each do |a|
+  a += 1
+end
+
+puts a
+#+END_SRC
+
+In this case, the outer variable =a= is being shadowed by the local variable inside the block, therefore, the outer =a= is actually never accessed by the block.
+
+
+
