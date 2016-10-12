@@ -1,14 +1,14 @@
 # Easy 1
 
--   The `String#chars` to get `["1", "3", "5"]` out of `135.to_s`. Same
-    as `135.to_s.split('')`.
+-   The `String#chars` to get `["1", "3", "5"]` out of `135.to_s`. Same as `135.to_s.split('')`.
 -   Instead of using `something.map { |x| x.to_i }`, we can use
     `something.map(&:to_i)`.
--   Methods to look at:
-    -   `Array#count`. This method can take a block so to count for
-        example only the values that meet some criteria
-    -   `Array#reverse` and `String#reverse`.
-- Search about `&:method_name` construction in the Gems installed.
+- Methods to look at:
+    - `Array#count`. This method can take a block so to count for example only the values that meet some criteria
+    - `Array#reverse` and `String#reverse`.
+
+### TODO:
+* [ ] Search about `&:method_name` construction in the Gems installed.
 
 # Easy 2
 
@@ -28,10 +28,25 @@ puts "The tip is $#{format('%.2f', 10)}"
 puts "The total is $#{format('%.2f', 100)}"
 
 # => The tip is $10.00
-# =>  The total is $110.00
+# => The total is $110.00
 ```
 
 - Remember to use `String#chop` to remove the last character of a string.
+
+# Easy 4
+
+- In a `case` statement, we can use different conditions in the `when` clause by separating them with comma. Example:
+
+```ruby
+case number
+when 5
+  'something'
+when 4, 7..9
+  'else'
+else
+  '...'
+end
+```
 
 # Easy 5
 
@@ -45,10 +60,10 @@ puts "The total is $#{format('%.2f', 100)}"
     before midnight:
 
 ```ruby
-time_of_day(0) == "00:00"
-time_of_day(35) == "00:35"
+time_of_day(0)     == "00:00"
+time_of_day(35)    == "00:35"
 time_of_day(-1437) == "00:03"
-time_of_day(800) == "13:20"
+time_of_day(800)   == "13:20"
 time_of_day(-4231) == "01:29"
 ```
 
@@ -85,25 +100,15 @@ puts "This is a very long sentence that we need to break in " \
 
 # Medium 1
 
--   Check `Array#rotate` to rotate an array, that is, to move the first
-    element to the last, and all other elements move down to index
-    `i-1`.
--   Slicing an array to capture from the second element to the last:
-    `array[1..-1]`.
--   We can use `downto(min)` to iterate in descending order instead of
-    ascending like in `times`. For example, `5.downto(2) do |n|`. `min`
-    can be a negative number.
--   We can similarly use `upto(num)` to iterate up to certain integer.
-    Example: `1.upto(5)`.
--   Checkout the method `String#center`. Example: `"hello".center(9)`
-    will return `' hello '` (i.e., 'hello' with two extra
-    spaces around).
+- Check `Array#rotate` to rotate an array, that is, to move the first element to the last, and all other elements move down to index `i-1`.
+-   Slicing an array to capture from the second element to the last: `array[1..-1]`.
+- We can use `downto(min)` to iterate in descending order instead of ascending like in `times`. For example, `5.downto(2) do |n|`. `min` can be a negative number.
+- We can similarly use `upto(num)` to iterate up to certain integer. Example: `1.upto(5)`.
+- Checkout the method `String#center`. Example: `"hello".center(9)` will return `' hello '` (i.e., 'hello' with two extra spaces around).
 
 # Medium 2
 
--   We can use `none?` method (see `my_abc.rb`) to return `true` if no
-    condition from the block has been met in any of the objects passed.
-    Example:
+- We can use `none?` method (see `my_abc.rb`) to return `true` if no condition from the block has been met in any of the objects passed. Example:
 
 ```ruby
 BLOCKS2.none? { |block| up_string.count(block) >= 2 }
@@ -111,6 +116,37 @@ BLOCKS2.none? { |block| up_string.count(block) >= 2 }
 
 - In an array, we can get the minimum value with the method `Array#min`, or the lowest numbers, for example `a.min(2)` will return an array with the lowest two numbers (can compare between strings as well). 
 - Remember to use `reduce` or `inject` to sum (or perform any other operation) across the elements of an array. For example `a.reduce(:+)`.
+- Example of using the `splat` operator as a method argument:
+
+```ruby
+def triangle(*args)
+  return :invalid if args.inject(:+) != 180 || args.any? { |a| a <= 0}
+  args.include?(90) ? :right : args.any? { |a| a > 90} ? :obtuse : :acute
+end
+```
+
+- A similar example to solve the same problem as above using `splat` in the second method, in this case, taking the arguments from an array:
+
+```ruby
+def valid_triangle?(a1, a2, a3)
+  angles = [a1, a2, a3]
+  angles.reduce(:+) == 180 && angles.all? { |x| x > 0 }
+end
+
+def triangle(a1, a2, a3)
+  angles = [a1, a2, a3]
+  return :invalid unless valid_triangle?(*angles)
+
+  if angles.any? { |a| a == 90 }
+    :right
+  elsif angles.all? { |a| a < 90 }
+    :acute
+  elsif angles.any? { |a| a > 90 }
+    :obtuse
+  end
+end
+```
+
 
 # Advanced 1
 
