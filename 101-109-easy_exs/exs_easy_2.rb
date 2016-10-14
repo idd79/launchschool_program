@@ -1,7 +1,7 @@
 # Easy 2 exercises for 101-109
 
 def next_exc
-  puts "-" * 5 + "Next Exercise" + "-" * 5
+  puts '-' * 5 + 'Next Exercise' + '-' * 5
 end
 
 # How old is Teddy? (Ex. 1)
@@ -62,3 +62,56 @@ if name[-1] == '!'
 else
   puts "Hello #{name}."
 end
+
+next_exc
+
+# Print Odd Numbers (Ex. 6)
+
+(1..99).each { |num| puts num if num.odd? }
+
+# Print Odd Numbers (Ex. 7)
+
+puts (1..99).select { |num| num % 2 == 0 }
+
+next_exc
+
+# Sum or Product of Consecutive Integers (Ex. 8)
+
+puts 'Please enter an integer greater than 0:'
+num = gets.chomp.to_i
+
+puts "Enter 's' to compute the sum, 'p' to compute the product:"
+operation = gets.chomp
+
+case operation
+when 's'
+  result = (1..num).reduce(0, :+)
+  puts "The sum of the integers between 1 and #{num} is #{result}"
+when 'p'
+  result = (1..num).reduce(1, :*)
+  puts "The product of the integers between 1 and #{num} is #{result}"
+else
+  puts 'Operation not recognized'
+end
+
+next_exc
+
+# Mutation (Ex. 10)
+
+# What will the following code print, and why? Don't run the code until you
+# have tried to answer.
+
+array1 = %w(Moe Larry Curly Chemp Harpo Chico Groucho Zeppo)
+array2 = []
+array1.each { |value| array2 << value }
+array1.each { |value| value.upcase! if value.start_with?('C') }
+puts array2
+
+# How can this feature of ruby get you in trouble? How can you avoid it?
+# Ans: reasing array1...
+
+array1 = %w(Moe Larry Curly Chemp Harpo Chico Groucho Zeppo)
+array2 = []
+array1.each { |value| array2 << value }
+array1 = array1.map { |value| value.upcase! if value.start_with?('C') }
+puts array2
