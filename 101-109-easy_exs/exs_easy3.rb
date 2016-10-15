@@ -38,16 +38,80 @@ puts "There are #{chars_count} characters in \"#{string}\"."
 
 next_exc
 
+# Multiplying two numbers (Ex. 4)
+
+def multiply(num1, num2)
+  num1 * num2
+end
+
+p multiply(5, 3) == 15
+
+next_exc
+
+# Squaring an argument (Ex. 5)
+
+def square(num)
+  multiply(num, num)
+end
+
+p square(5) == 25
+p square(-8) == 64
+
+def power(num, power)
+  num = 1 / num.to_f if power < 0
+
+  return 1 if power == 0
+  return num if power == 1 || power == -1
+  power = power.abs
+  result = num
+  (power - 1).times do
+    result = multiply(result, num)
+  end
+  result
+end
+
+next_exc
+
+# Exclusive Or (Ex. 6)
+
+def xor?(arg1, arg2)
+  (arg1 && !arg2) || (!arg1 && arg2)
+end
+
+p xor?(5.even?, 4.even?) == true
+p xor?(5.odd?, 4.odd?)   == true
+p xor?(5.odd?, 4.even?)  == false
+p xor?(5.even?, 4.odd?)  == false
+
+next_exc
+
+# Odd lists (Ex. 7)
+
+def oddities(array)
+  result = []
+  array.each_with_index { |x, i| result << x if i.even? }
+  result
+end
+
+p oddities([2, 3, 4, 5, 6]) == [2, 4, 6]
+p oddities(['abc', 'def'])  == ['abc']
+p oddities([123])           == [123]
+p oddities([])              == []
+
+def evenities(array)
+  array.select.with_index { |_, i| i.odd? }
+end
+
 # Palindromic Strings (Ex. 8)
 
 def palindrome?(input)
   input == input.reverse
 end
 
-p palindrome?('madam') == true
-p palindrome?('Madam') == false          # (case matters)
+p palindrome?('madam')          == true
+p palindrome?('Madam')          == false # (case matters)
 p palindrome?("madam i'm adam") == false # (all characters matter)
-p palindrome?('356653') == true
+p palindrome?('356653')         == true
 
 next_exc
 
@@ -58,9 +122,9 @@ def real_palindrome?(string)
   palindrome?(string)
 end
 
-p real_palindrome?('madam') == true
-p real_palindrome?('Madam') == true           # (case does not matter)
+p real_palindrome?('madam')           == true
+p real_palindrome?('Madam')           == true # (case does not matter)
 p real_palindrome?("Madam, I'm Adam") == true # (only alphanumerics matter)
-p real_palindrome?('356653') == true
-p real_palindrome?('356a653') == true
-p real_palindrome?('123ab321') == false
+p real_palindrome?('356653')          == true
+p real_palindrome?('356a653')         == true
+p real_palindrome?('123ab321')        == false
