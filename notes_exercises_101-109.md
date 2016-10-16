@@ -33,6 +33,34 @@ puts "The total is $#{format('%.2f', 100)}"
 
 - Remember to use `String#chop` to remove the last character of a string.
 
+# Easy 3
+
+- When using the `*` operator on an array, the result is similar as when we use it in a `string`. That is:
+
+```ruby
+'hi' * 3 # => 'hihihi'
+[1, 2] * 3 # => [1, 2, 1, 2, 1, 2]
+```
+
+- Just like `map` has its counterpart `map.with_index`, `select` and `reject` have also `select.with_index` and `reject.with_index`.
+
+- We can use the `Date` class in order to check whether a year is a leap year. Example:
+
+```ruby
+require 'date'
+
+def leap_year?(year)
+  Date.new(year, 1, 1, Date::GREGORIAN).leap?
+end
+```
+
+- Alternatively, we could check in the following way:
+
+```ruby
+Date.gregorian_leap?(1900)        #=> false
+Date.gregorian_leap?(2000)        #=> true
+```
+
 # Easy 4
 
 - In a `case` statement, we can use different conditions in the `when` clause by separating them with comma. Example:
@@ -48,16 +76,13 @@ else
 end
 ```
 
+- We can use the __spaceship__ operator `<=>` to compare two objects and return either `+1` or `-1`. E.g. `number <=> 0`. If `number` is greater than `0`, then `1` is returned, if `number` is less than `0`, it will return `-1`. It will return `0` if the values are the same.
+
 # Easy 5
 
--   The method `String#ord` returns the ordinal or ascii value of a
-    one-character string.
--   Similarly, the method `Integer#chr` returns the character
-    represented by the value. Therefore, `char.ord.chr == chr` is
-    `true`.
--   Check the `Kernel#format` method. Example to for a method that
-    prints the time of the day based on the number of minutes after or
-    before midnight:
+-   The method `String#ord` returns the ordinal or ascii value of a one-character string.
+-   Similarly, the method `Integer#chr` returns the character represented by the value. Therefore, `char.ord.chr == chr` is `true`.
+-   Check the `Kernel#format` method. Example to for a method that prints the time of the day based on the number of minutes after or before midnight:
 
 ```ruby
 time_of_day(0)     == "00:00"
@@ -81,10 +106,7 @@ def time_of_day(delta_minutes)
 end
 ```
 
--   From the above method, check as well the method `Fixnum#divmod`,
-    which will return an array of size 2. For example, `800.divmod(60)`
-    will return `[13, 20]`, which are the quotient and the
-    modulus, respectively.
+-   From the above method, check as well the method `Fixnum#divmod`, which will return an array of size 2. For example, `800.divmod(60)`will return `[13, 20]`, which are the quotient and the modulus, respectively.
 
 # Easy 9
 
@@ -124,6 +146,8 @@ def triangle(*args)
   args.include?(90) ? :right : args.any? { |a| a > 90} ? :obtuse : :acute
 end
 ```
+
+- `args` in the example above is actually an array given the name `args`, so we can operate on `args` just like we would on any array.
 
 - A similar example to solve the same problem as above using `splat` in the second method, in this case, taking the arguments from an array:
 
