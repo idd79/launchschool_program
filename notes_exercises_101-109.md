@@ -108,6 +108,15 @@ end
 
 -   From the above method, check as well the method `Fixnum#divmod`, which will return an array of size 2. For example, `800.divmod(60)`will return `[13, 20]`, which are the quotient and the modulus, respectively.
 
+- Use the `squeeze` method whenever we want to get rid of characters that are repeated consecutively. Example:
+
+```ruby
+"we    like    food".squeeze(' ')
+# => "we like food"
+```
+
+- The expression `/[^a-z]/i` is a regular expression that matches any character that is not an uppercase or lowercase letter. The `/i` part of this expression is what makes this expression case insensitive.
+
 # Easy 9
 
 - We can break a string line that is too long using `\`. Example:
