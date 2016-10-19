@@ -117,6 +117,38 @@ end
 
 - The expression `/[^a-z]/i` is a regular expression that matches any character that is not an uppercase or lowercase letter. The `/i` part of this expression is what makes this expression case insensitive.
 
+- We can initialize a `Hash` with a given predetermined value, so when we call a `Hash` key for the first time it doesn't return an error. We can use for example `Hash.new(0)` so every new key initializes to `zero`, or `Hash.new('Go fish')`. An alternative way is to use the `fetch` method. e.g. `hash.fetch(key, 0)`.
+
+- We can use the `String#count` method to count for the number of characters that match certain expression. For example, `"hello!".count "a-zA-Z"` will count 5 letters as it omits the `!` sign. Similarly, we can use the `String#delete` method in the same fashion, that is `"hello!".delete("^A-Za-z")` will delete the `!` sign from the string and returns the new string, in this case `hello`.
+
+- We can use two arrays to create a `Hash`, one of the arrays being the keys, and the other one being the values. Example:
+
+```ruby
+a1 = [0, 1, 2]
+a2 = ['zero', 'one', 'two']
+# two ways to combine them into a Hash:
+Hash[a1.zip(a2)]
+a1.zip(a2).to_h
+# => {0=>"zero", 1=>"one", 2=>"two"}
+```
+
+- In the previous example we also use the `Array#zip` method to combine two array. Example:
+
+```ruby
+a1 = [0, 1, 2]
+a2 = ['zero', 'one', 'two']
+a1.zip(a2)
+# => [[0, "zero"], [1, "one"], [2, "two"]]
+```
+
+- Use the `String#ljust`, `String#rjust`, and `String#center` to justify text withing certain number of spaces. Examples:
+
+```ruby
+'hello'.center(20)
+'hello'rjust(20)
+'hello'.ljust(20)
+```
+
 # Easy 9
 
 - We can break a string line that is too long using `\`. Example:
