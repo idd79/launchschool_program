@@ -149,6 +149,64 @@ a1.zip(a2)
 'hello'.ljust(20)
 ```
 
+# Easy 6
+
+- Remember parallel assignment which is a ruby idiom for exchanging two values without requiring an intermediate variable. Example:
+
+```ruby
+array[left_index], array[right_index] = array[right_index], array[left_index]
+```
+
+- Three different ways of solving a problem, in this case reversing an array (without using the `Array#reverse` method). We use in this case `reverse_each`, `each_with_object`, and `inject`:
+
+```ruby
+def reverse(array)
+  new_array = []
+  array.reverse_each { |item| new_array << item }
+  new_array
+end
+
+def reverse2(array)
+  array.each_with_object([]) { |item, new_array| new_array.unshift(item) }
+end
+
+def reverse3(array)
+  array.reverse_each.inject([]) { |new_array, item| new_array << item }
+end
+```
+
+- Observe that both `each_with_object` and `inject` methods return a new object, in this case a new `array`.
+
+- There is an `array` method called `Array#|` which returns the set union of two arrays, removing any duplicates. Example:
+
+```ruby
+def merge(array_1, array_2)
+  array_1 | array_2
+end
+
+merge([1, 3, 4], [3, 6, 9]) # => [1, 3, 5, 6, 9]
+```
+
+- We can use the `Enumerable#find`, `Enumerable#find_all`, and `Enumerable#find_index` to find the elements that meet certain condition(s) given by a block. Example:
+
+```ruby
+def find_dup(array)
+  array.find { |element| array.count(element) == 2 }
+end
+```
+
+- In the example above, `find` finds the first element in the array that meets the condition.
+
+- The method `Array#rindex(val)` returns the index of the last value in the array that is equal to `val`, as opposed to `Array#index` that returns the first value.
+
+- In the following example, the `!!` force the return value to be `true` or `false`, as otherwise would be a number (the index) or `nil`:
+
+```ruby
+def include2?(array, value)
+  !!array.find_index(value)
+end
+```
+
 # Easy 9
 
 - We can break a string line that is too long using `\`. Example:
@@ -159,7 +217,6 @@ puts "This is a very long sentence that we need to break in " \
 ```
 
 - We can use the `Numeric#abs` method to obtain the absolute value of a number.
-
 
 # Medium 1
 
@@ -216,8 +273,8 @@ end
 # Advanced 1
 
 - Checkout the methods on how to transpose and rotate a matrix (90, 180, 260, and 360 degrees).
-- Similar to `each` to iterate over the elements of an object such an array, we can use the `reverse_each` to iterate but in the opposite order. That is, it will start with the last element instead of the first.
-- Also, we can use the `Array#reverse` method to reverse the elements of an array. Example:
+- Similar to `each` to iterate over the elements of an `array` such an array, we can use the `Array#reverse_each` to iterate but in the opposite order. That is, it will start with the last element instead of the first.
+- Also, we can use the `Array#reverse` method to reverse the elements of an array (it also applies to `strings`). Example:
 
 ```ruby
 a = [1, 2, 3]
