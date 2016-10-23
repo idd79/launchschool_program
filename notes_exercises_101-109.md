@@ -207,6 +207,33 @@ def include2?(array, value)
 end
 ```
 
+# Easy 7
+
+- Example of using `count` with a block:
+
+```ruby
+counts = {}
+characters = string.chars
+counts[:lowercase] = characters.count { |char| char =~ /[a-z]/ }
+```
+
+- The fellowing methods are equivalent and show a concise way to use an iterator method such as `map`:
+
+```ruby
+def word_cap(string)
+  string.split.map(&:capitalize).join(' ')
+end
+
+# It's equivalent to
+
+def word_cap(string)
+  string.split.map { |word| word.capitalize }.join(' ')
+end
+```
+
+- In general, the form `(&:method)` is a shorthand for saying `{ |item| item.method }`.
+
+
 # Easy 9
 
 - We can break a string line that is too long using `\`. Example:
