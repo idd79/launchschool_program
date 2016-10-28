@@ -30,9 +30,9 @@ def print_diamond(diamond)
 end
 
 print_diamond(create_diamond(1))
-puts ""
+puts ''
 print_diamond(create_diamond(3))
-puts ""
+puts ''
 print_diamond(create_diamond(5))
-puts ""
+puts ''
 print_diamond(create_diamond(9))
