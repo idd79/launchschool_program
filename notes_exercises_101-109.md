@@ -233,6 +233,11 @@ end
 
 - In general, the form `(&:method)` is a shorthand for saying `{ |item| item.method }`.
 
+# Easy 8
+
+- Use the `String#slice` method to return substrings out of a string. E.g. `hello.slice(0..2) # => 'hel'`.
+
+- Use the `Array#concat` to concatenate two arrays. E.g. `["a", "b"].concat( ["c", "d"] ) #=> ["a", "b", "c", "d"]`.
 
 # Easy 9
 
