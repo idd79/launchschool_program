@@ -258,6 +258,38 @@ puts "This is a very long sentence that we need to break in " \
 - We can similarly use `upto(num)` to iterate up to certain integer. Example: `1.upto(5)`.
 - Checkout the method `String#center`. Example: `"hello".center(9)` will return `' hello '` (i.e., 'hello' with two extra spaces around).
 
+- Example of substituting numbers in words to digits using regex:
+
+```ruby
+NUMS = {"zero" => "0", "one" => "1", "two" => "2", "three" => "3",
+        "four" => "4", "five" => "5", "six" => "6", "seven" => "7",
+        "eight" => "8", "nine" => "9"}.freeze
+
+def word_to_digit(string)
+  string.gsub(/#{NUMS.keys.join("|")}/, NUMS)
+end
+```
+
+- According to the example above, we can use a `hash` as replacement object, in this case `NUMS`.
+
+- Another Regex example to to format the numbers within a sentence:
+
+```ruby
+string.gsub(/(\d{3})(\d{3})(\d{4})/) {
+  format("(%d) %d-%d", "#{$1}", "#{$2}", "#{$3}")
+}
+
+# or
+
+string.gsub(/(\d{3})(\d{3})(\d{4})/, '(\1) \2-\3')
+
+# Will return:
+"Please call me at (555) 123-4567. Thanks."
+# The original string was:
+"Please call me at 5551234567. Thanks."
+```
+
+
 # Medium 2
 
 - We can use `none?` method (see `my_abc.rb`) to return `true` if no condition from the block has been met in any of the objects passed. Example:
