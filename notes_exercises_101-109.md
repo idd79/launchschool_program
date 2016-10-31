@@ -2,10 +2,10 @@
 
 -   The `String#chars` to get `["1", "3", "5"]` out of `135.to_s`. Same as `135.to_s.split('')`.
 -   Instead of using `something.map { |x| x.to_i }`, we can use
-    `something.map(&:to_i)`.
+`something.map(&:to_i)`.
 - Methods to look at:
-    - `Array#count`. This method can take a block so to count for example only the values that meet some criteria
-    - `Array#reverse` and `String#reverse`.
+  - `Array#count`. This method can take a block so to count for example only the values that meet some criteria
+  - `Array#reverse` and `String#reverse`.
 
 ### TODO:
 * [ ] Search about `&:method_name` construction in the Gems installed.
@@ -333,6 +333,13 @@ def triangle(a1, a2, a3)
 end
 ```
 
+- We can remove the consecutive repeated characters from a string using regex (also if we convert the string to an array and then use the `uniq` method):
+
+```ruby
+'aaabcaddd'.gsub(/(.)\1+/, '\1')
+# => "abcad" 
+```
+
 
 # Advanced 1
 
@@ -346,3 +353,4 @@ a.reverse
 
 # => [3, 2, 1]
 ```
+[]: 
