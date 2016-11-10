@@ -13,7 +13,7 @@ def minilang(string)
            %w(PUSH PRINT POP).include?(item)
       return ERROR
     end
-    
+
     case item
     when /^\d+?/ then reg = item.to_i
     when 'PUSH' then stack << reg
