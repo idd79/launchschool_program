@@ -353,4 +353,66 @@ a.reverse
 
 # => [3, 2, 1]
 ```
-[]: 
+
+- Madlibs exercise. Read from a file and insert random text in each line:
+
+```ruby
+# Example data:
+
+The %{adjective} brown %{noun} %{adverb}
+%{verb} the %{adjective} yellow
+%{noun}, who %{adverb} %{verb} his
+%{noun} and looks around.
+
+# Solution
+
+ADJECTIVES = %w(quick lazy sleepy ugly).freeze
+NOUNS      = %w(fox dog head leg cat tail).freeze
+VERBS      = %w(spins bites licks hurdles).freeze
+ADVERBS    = %w(easily lazily noisly excitedly).freeze
+
+File.open('madlibs.txt') do |file|
+  file.each do |line|
+    puts format(line, noun:      NOUNS.sample,
+                      verb:      VERBS.sample,
+                      adjective: ADJECTIVES.sample,
+                      adverb:    ADVERBS.sample)
+  end
+end
+```
+
+- Note that the format placeholders use `%{name}`, not `#{name}`: the latter is interpolation, which differs from the type of substitution performed by format.
+
+
+# Miscellaneous
+
+- In order to iterate step by step by, similar to `upto` but being able to define or control how big the steps are, we can use `step`. Example: 
+
+```ruby
+1.step(10, 2) { |x| puts x }
+
+# Will print
+1
+3
+5
+7
+9
+```
+
+- Iterate through an `array` (or `range`) using `for`:
+
+```ruby
+friends = ['Sarah', 'John', 'Hannah', 'Dave']
+
+for friend in friends # in a range we can use => i in 0..num
+  puts "Hello, #{friend}!"
+end
+```
+
+- To check whether a number is withing certain range (inclusive), we can use either `between?`, `include?` or `cover?` methods. Examples:
+
+```ruby
+0.between?(0, 10) # => true
+(0..10).cover?(10) # => true
+```
+
