@@ -416,3 +416,12 @@ end
 (0..10).cover?(10) # => true
 ```
 
+- Examples using `Kernel#format`:
+
+```ruby
+format("%4.3s", "Lisa") # => “ Lis”
+format("$% .2f", "37.94") # => "$ 37.94"
+format("%010.2e", "123_456") # => "001.23e+05”
+format("%02d:%02d", "3", "5") # => "03:05"
+```
+
