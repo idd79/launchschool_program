@@ -1,6 +1,8 @@
+# Ruby 101-109 Small Problems
+
 # Easy 1
 
--   The `String#chars` to get `["1", "3", "5"]` out of `135.to_s`. Same as `135.to_s.split('')`.
+-   Use `String#chars` to get `["1", "3", "5"]` out of `135.to_s`. Same as `135.to_s.split('')`.
 -   Instead of using `something.map { |x| x.to_i }`, we can use
 `something.map(&:to_i)`.
 - Methods to look at:
@@ -82,7 +84,7 @@ end
 
 -   The method `String#ord` returns the ordinal or ascii value of a one-character string.
 -   Similarly, the method `Integer#chr` returns the character represented by the value. Therefore, `char.ord.chr == chr` is `true`.
--   Check the `Kernel#format` method. Example to for a method that prints the time of the day based on the number of minutes after or before midnight:
+-   Check the `Kernel#format` method. Example of a method that prints the time of the day based on the number of minutes after or before midnight:
 
 ```ruby
 time_of_day(0)     == "00:00"
