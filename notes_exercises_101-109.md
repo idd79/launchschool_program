@@ -189,6 +189,14 @@ end
 merge([1, 3, 4], [3, 6, 9]) # => [1, 3, 5, 6, 9]
 ```
 
+- Similarly, `Array#&` returns the set interception of two arrays.
+
+```ruby
+a1 = [1, 2, 3]
+a2 = [2, 3, 5]
+a1 & a2 # => [2, 3]
+```
+
 - We can use the `Enumerable#find`, `Enumerable#find_all`, and `Enumerable#find_index` to find the elements that meet certain condition(s) given by a block. Example:
 
 ```ruby
