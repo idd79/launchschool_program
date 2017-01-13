@@ -1,7 +1,7 @@
 # OO RPS game
 
 class Move
-  VALUES = %w(rock paper scissors)
+  VALUES = %w(rock paper scissors).freeze
 
   def initialize(value)
     @value = value
@@ -20,29 +20,15 @@ class Move
   end
 
   def >(other_move)
-    if rock? 
-      return true if other_move.scissors?
-      return false
-    elsif paper?
-      return true if other_move.rock?
-      return false
-    elsif scissors?
-      return true if other_move.paper?
-      return false
-    end
+    (rock? && other_move.scissors?) ||
+      (paper? && other_move.rock?) ||
+      (scissors? && other_move.paper?)
   end
 
   def <(other_move)
-    if rock? 
-      return true if other_move.paper?
-      return false
-    elsif paper?
-      return true if other_move.scissors?
-      return false
-    elsif scissors?
-      return true if other_move.rock?
-      return false
-    end
+    (rock? && other_move.paper?) ||
+      (paper? && other_move.scissors?) ||
+      (scissors? && other_move.rock?)
   end
 
   def to_s
@@ -109,10 +95,12 @@ class RPSGame
     puts "Thanks for playing. Good bye!"
   end
 
-  def display_winner
+  def display_moves
     puts "#{human.name} chose #{human.move}."
     puts "#{computer.name} chose #{computer.move}."
+  end
 
+  def display_winner
     if human.move > computer.move
       puts "#{human.name} won!"
     elsif human.move < computer.move
@@ -120,21 +108,6 @@ class RPSGame
     else
       puts "It's a tie!"
     end
-
-  #   case human.move
-  #   when 'rock'
-  #     puts "It's a tie!" if computer.move == 'rock'
-  #     puts "#{human.name} won!" if computer.move == 'paper'
-  #     puts "#{human.name} lost!" if computer.move == 'scissors'
-  #   when 'paper'
-  #     puts "It's a tie!" if computer.move == 'paper'
-  #     puts "#{human.name} won!" if computer.move == 'rock'
-  #     puts "#{human.name} lost!" if computer.move == 'scissors'
-  #   when 'scissors'
-  #     puts "It's a tie!" if computer.move == 'scissors'
-  #     puts "#{human.name} won!" if computer.move == 'paper'
-  #     puts "#{human.name} lost!" if computer.move == 'rock'
-  #   end
   end
 
   def play_again?
@@ -154,6 +127,7 @@ class RPSGame
     loop do
       human.choose
       computer.choose
+      display_moves
       display_winner
       break unless play_again?
     end
