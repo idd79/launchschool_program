@@ -82,6 +82,8 @@ end
 class RPSGame
   attr_accessor :human, :computer, :score
 
+  POINTS = 3
+
   def initialize
     @human = Human.new
     @computer = Computer.new
@@ -108,6 +110,14 @@ class RPSGame
       puts "#{computer.name} won!"
     else
       puts "It's a tie!"
+    end
+  end
+
+  def display_match_winner
+    if score[human.name] == POINTS
+      puts "#{human.name} won the match!"
+    else
+      puts "#{computer.name} won the match!"
     end
   end
 
@@ -155,6 +165,8 @@ class RPSGame
       display_winner
       add_score
       display_score
+      next unless score.values.include?(POINTS)
+      display_match_winner
       break unless play_again?
     end
     display_goodbye_message
