@@ -78,16 +78,44 @@ class Computer < Player
   end
 end
 
+class Score
+  def initialize(player1, player2)
+    @score = { player1 => 0, player2 => 0 }
+  end
+
+  def add_point(player)
+    @score[player] += 1
+  end
+
+  def display_players_and_points
+    puts 'The score is:'
+    @score.each do |k, v|
+      puts "#{k} = #{v}"
+    end
+  end
+
+  def return_all_points
+    @score.values
+  end
+
+  def return_points(player)
+    @score[player]
+  end
+end
+
 # Game Orchestration engine
 class RPSGame
   attr_accessor :human, :computer, :score
 
-  POINTS = 3
+  POINTS = 2
 
   def initialize
     @human = Human.new
     @computer = Computer.new
-    @score = { human.name => 0, computer.name => 0 }
+  end
+
+  def reset_score
+    self.score = Score.new(human.name, computer.name)
   end
 
   def display_welcome_message
@@ -96,6 +124,11 @@ class RPSGame
 
   def display_goodbye_message
     puts "Thanks for playing. Good bye!"
+  end
+
+  def players_choose
+    human.choose
+    computer.choose
   end
 
   def display_moves
@@ -113,34 +146,23 @@ class RPSGame
     end
   end
 
+  def add_score(player)
+    score.add_point(player)
+  end
+
+  def change_total_score
+    if human.move > computer.move
+      add_score(human.name)
+    elsif human.move < computer.move
+      add_score(computer.name)
+    end
+  end
+
   def display_match_winner
-    if score[human.name] == POINTS
+    if score.return_points(human.name) == POINTS
       puts "#{human.name} won the match!"
     else
       puts "#{computer.name} won the match!"
-    end
-  end
-
-  def add_score_human
-    score[human.name] += 1
-  end
-
-  def add_score_computer
-    score[computer.name] += 1
-  end
-
-  def add_score
-    if human.move > computer.move
-      add_score_human
-    elsif human.move < computer.move
-      add_score_computer
-    end
-  end
-
-  def display_score
-    puts 'The score is:'
-    score.each do |k, v|
-      puts "#{k} = #{v}"
     end
   end
 
@@ -159,16 +181,21 @@ class RPSGame
     display_welcome_message
 
     loop do
-      human.choose
-      computer.choose
-      display_moves
-      display_winner
-      add_score
-      display_score
-      next unless score.values.include?(POINTS)
+      reset_score
+
+      loop do
+        players_choose
+        display_moves
+        display_winner
+        change_total_score
+        score.display_players_and_points
+        break if score.return_all_points.include?(POINTS)
+      end
+
       display_match_winner
       break unless play_again?
     end
+
     display_goodbye_message
   end
 end
