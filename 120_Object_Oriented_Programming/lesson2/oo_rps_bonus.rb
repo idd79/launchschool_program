@@ -1,34 +1,30 @@
 # OO RPS game with bonus features
 
 class Move
-  VALUES = %w(rock paper scissors).freeze
+  VALUES = %w(rock paper scissors lizard spock).freeze
+
+  WIN_CONDITIONS = { "rock" => %w(scissors lizard),
+                     "paper" => %w(rock spock),
+                     "scissors" => %w(paper lizard),
+                     "lizard" => %w(paper spock),
+                     "spock" => %w(scissors rock) }.freeze
+
+  LOSS_CONDITIONS = { "rock" => %w(paper spock),
+                      "paper" => %w(scissors lizard),
+                      "scissors" => %w(rock spock),
+                      "lizard" => %w(rock scissors),
+                      "spock" => %w(paper lizard) }.freeze
 
   def initialize(value)
     @value = value
   end
 
-  def scissors?
-    @value == 'scissors'
-  end
-
-  def rock?
-    @value == 'rock'
-  end
-
-  def paper?
-    @value == 'paper'
-  end
-
   def >(other_move)
-    (rock? && other_move.scissors?) ||
-      (paper? && other_move.rock?) ||
-      (scissors? && other_move.paper?)
+    WIN_CONDITIONS[@value].include?(other_move.to_s)
   end
 
   def <(other_move)
-    (rock? && other_move.paper?) ||
-      (paper? && other_move.scissors?) ||
-      (scissors? && other_move.rock?)
+    LOSS_CONDITIONS[@value].include?(other_move.to_s)
   end
 
   def to_s
@@ -59,7 +55,7 @@ class Human < Player
   def choose
     choice = ''
     loop do
-      puts 'Please choose rock, paper, or scissors:'
+      puts 'Please choose rock, paper, scissors, lizard, or spock:'
       choice = gets.chomp
       break if Move::VALUES.include? choice.downcase
       puts 'Sorry, invalid choice. Please try again!'
@@ -107,7 +103,7 @@ end
 class RPSGame
   attr_accessor :human, :computer, :score
 
-  POINTS = 2
+  POINTS = 3
 
   def initialize
     @human = Human.new
