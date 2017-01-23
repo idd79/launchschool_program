@@ -74,6 +74,21 @@ class Computer < Player
   end
 end
 
+class History
+  def initialize(player1, player2)
+    @history = { player1 => [], player2 => [] }
+  end
+
+  def add_move(player)
+    @history[player.name] << player.move.to_s
+  end
+
+  def display_all
+    puts 'The moves history is:'
+    @history.each { |k, v| puts "#{k} --> #{v}" }
+  end
+end
+
 class Score
   def initialize(player1, player2)
     @score = { player1 => 0, player2 => 0 }
@@ -85,9 +100,7 @@ class Score
 
   def display_players_and_points
     puts 'The score is:'
-    @score.each do |k, v|
-      puts "#{k} = #{v}"
-    end
+    @score.each { |k, v| puts "#{k} = #{v}" }
   end
 
   def return_all_points
@@ -101,13 +114,14 @@ end
 
 # Game Orchestration engine
 class RPSGame
-  attr_accessor :human, :computer, :score
+  attr_accessor :human, :computer, :score, :history
 
   POINTS = 3
 
   def initialize
     @human = Human.new
     @computer = Computer.new
+    @history = History.new(human.name, computer.name)
   end
 
   def reset_score
@@ -154,6 +168,11 @@ class RPSGame
     end
   end
 
+  def update_history
+    history.add_move(human)
+    history.add_move(computer)
+  end
+
   def display_match_winner
     if score.return_points(human.name) == POINTS
       puts "#{human.name} won the match!"
@@ -180,9 +199,11 @@ class RPSGame
       reset_score
 
       loop do
+        history.display_all
         players_choose
         display_moves
         display_winner
+        update_history
         change_total_score
         score.display_players_and_points
         break if score.return_all_points.include?(POINTS)
