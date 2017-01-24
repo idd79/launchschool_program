@@ -69,23 +69,48 @@ class Computer < Player
     self.name = %w(R2D2 Hal Chappie Sonny Number\ 5).sample
   end
 
-  def choose
+  def choose_random
     self.move = Move.new(Move::VALUES.sample)
+  end
+
+  def choose_smart(history)
+    return choose_random if history.total_moves_count < 2
+    
+    dist = history.human_moves_count
+    target = dist.select { |_, v| v == dist.values.max }.keys.sample
+
+    self.move = Move.new(Move::LOSS_CONDITIONS[target].sample)
   end
 end
 
 class History
-  def initialize(player1, player2)
-    @history = { player1 => [], player2 => [] }
+  def initialize(human, computer)
+    @human = human
+    @computer = computer
+    @history = { human.name => [], computer.name => [] }
   end
 
-  def add_move(player)
-    @history[player.name] << player.move.to_s
+  def add_moves
+    @history[@human.name] << @human.move.to_s
+    @history[@computer.name] << @computer.move.to_s
   end
 
   def display_all
     puts 'The moves history is:'
     @history.each { |k, v| puts "#{k} --> #{v}" }
+  end
+
+  def total_moves_count
+    @history.values.first.count
+  end
+
+  def human_moves_count
+    values = Move::VALUES
+
+    distribution = Hash.new(0)
+    values.each { |m| distribution[m] = @history[@human.name].count(m) }
+
+    distribution
   end
 end
 
@@ -95,7 +120,7 @@ class Score
   end
 
   def add_point(player)
-    @score[player] += 1
+    @score[player.name] += 1
   end
 
   def display_players_and_points
@@ -121,7 +146,7 @@ class RPSGame
   def initialize
     @human = Human.new
     @computer = Computer.new
-    @history = History.new(human.name, computer.name)
+    @history = History.new(human, computer)
   end
 
   def reset_score
@@ -138,7 +163,7 @@ class RPSGame
 
   def players_choose
     human.choose
-    computer.choose
+    computer.choose_smart(history)
   end
 
   def display_moves
@@ -162,15 +187,10 @@ class RPSGame
 
   def change_total_score
     if human.move > computer.move
-      add_score(human.name)
+      add_score(human)
     elsif human.move < computer.move
-      add_score(computer.name)
+      add_score(computer)
     end
-  end
-
-  def update_history
-    history.add_move(human)
-    history.add_move(computer)
   end
 
   def display_match_winner
@@ -203,7 +223,7 @@ class RPSGame
         players_choose
         display_moves
         display_winner
-        update_history
+        history.add_moves
         change_total_score
         score.display_players_and_points
         break if score.return_all_points.include?(POINTS)
