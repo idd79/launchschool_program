@@ -202,7 +202,7 @@ class RPSGame
   end
 
   def display_history
-    history.display_history
+    history.display_all
   end
 
   def play_again?
