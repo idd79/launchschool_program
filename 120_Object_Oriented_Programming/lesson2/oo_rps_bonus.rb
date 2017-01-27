@@ -75,7 +75,7 @@ class Computer < Player
 
   def choose_smart(history)
     return choose_random if history.total_moves_count < 2
-    
+
     dist = history.human_moves_count
     target = dist.select { |_, v| v == dist.values.max }.keys.sample
 
@@ -201,6 +201,10 @@ class RPSGame
     end
   end
 
+  def display_history
+    history.display_history
+  end
+
   def play_again?
     ans = ''
     loop do
@@ -213,13 +217,11 @@ class RPSGame
   end
 
   def play
-    display_welcome_message
-
     loop do
       reset_score
 
       loop do
-        history.display_all
+        display_history
         players_choose
         display_moves
         display_winner
@@ -232,9 +234,10 @@ class RPSGame
       display_match_winner
       break unless play_again?
     end
-
-    display_goodbye_message
   end
 end
 
-RPSGame.new.play
+game = RPSGame.new
+game.display_welcome_message
+game.play
+game.display_goodbye_message
