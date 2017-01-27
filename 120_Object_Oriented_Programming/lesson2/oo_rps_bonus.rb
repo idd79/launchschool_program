@@ -3,17 +3,17 @@
 class Move
   VALUES = %w(rock paper scissors lizard spock).freeze
 
-  WIN_CONDITIONS = { "rock" => %w(scissors lizard),
-                     "paper" => %w(rock spock),
-                     "scissors" => %w(paper lizard),
-                     "lizard" => %w(paper spock),
-                     "spock" => %w(scissors rock) }.freeze
+  WIN_CONDITIONS = { 'rock'     => %w(scissors lizard),
+                     'paper'    => %w(rock spock),
+                     'scissors' => %w(paper lizard),
+                     'lizard'   => %w(paper spock),
+                     'spock'    => %w(scissors rock) }.freeze
 
-  LOSS_CONDITIONS = { "rock" => %w(paper spock),
-                      "paper" => %w(scissors lizard),
-                      "scissors" => %w(rock spock),
-                      "lizard" => %w(rock scissors),
-                      "spock" => %w(paper lizard) }.freeze
+  LOSS_CONDITIONS = { 'rock'     => %w(paper spock),
+                      'paper'    => %w(scissors lizard),
+                      'scissors' => %w(rock spock),
+                      'lizard'   => %w(rock scissors),
+                      'spock'    => %w(paper lizard) }.freeze
 
   def initialize(value)
     @value = value
@@ -44,7 +44,7 @@ class Human < Player
   def set_name
     ans = ''
     loop do
-      puts "What's your name?"
+      puts "Hello! What's your name?"
       ans = gets.chomp
       break unless ans.empty?
       puts "Sorry, must enter a value."
@@ -55,7 +55,8 @@ class Human < Player
   def choose
     choice = ''
     loop do
-      puts 'Please choose rock, paper, scissors, lizard, or spock:'
+      puts ' '
+      puts '--> Please choose rock, paper, scissors, lizard, or spock:'
       choice = gets.chomp
       break if Move::VALUES.include? choice.downcase
       puts 'Sorry, invalid choice. Please try again!'
@@ -106,10 +107,10 @@ class Computer < Player
 
   def choose
     case name
-    when 'R2D2' then choose_smart
-    when 'Hal' then choose_weighted('rock' => 0.3, 'lizard' => 0.7)
+    when 'R2D2'    then choose_smart
+    when 'Hal'     then choose_weighted('rock' => 0.3, 'lizard' => 0.7)
     when 'Chappie' then choose_random
-    when 'Sonny' then choose_weighted('rock' => 1)
+    when 'Sonny'   then choose_weighted('rock' => 1)
     when 'Number5' then choose_weighted('rock' => 0.05,
                                         'lizard' => 0.05,
                                         'scissors' => 0.7,
@@ -132,8 +133,8 @@ class History
   end
 
   def display_all
-    puts 'The moves history is:'
-    @history.each { |k, v| puts "#{k} --> #{v}" }
+    puts '--> The moves history is:'
+    @history.each { |k, v| puts "#{k} => #{v}" }
   end
 
   def total_moves_count
@@ -160,7 +161,7 @@ class Score
   end
 
   def display_players_and_points
-    puts 'The score is:'
+    puts '--> The score is:'
     @score.each { |k, v| puts "#{k} = #{v}" }
   end
 
