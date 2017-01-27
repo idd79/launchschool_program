@@ -65,21 +65,57 @@ class Human < Player
 end
 
 class Computer < Player
+  attr_accessor :moves_history
+
   def set_name
-    self.name = %w(R2D2 Hal Chappie Sonny Number\ 5).sample
+    self.name = %w(R2D2 Hal Chappie Sonny Number5).sample
+  end
+
+  def cumulative_dist(sorted_array)
+    return sorted_array if sorted_array.length == 1
+
+    cd = [sorted_array[0]]
+    1.upto(sorted_array.length - 1) { |x| cd << sorted_array[x] + cd[x - 1] }
+
+    cd
+  end
+
+  def choose_weighted(distribution = {})
+    cd = cumulative_dist(distribution.values.sort)
+    distribution = distribution.sort_by { |_, v| v }
+    sorted_options = distribution.each_with_object([]) { |x, a| a << x[0] }
+
+    r = rand
+    choice = sorted_options[cd.find_index { |x| r < x }]
+    self.move = Move.new(choice)
   end
 
   def choose_random
     self.move = Move.new(Move::VALUES.sample)
   end
 
-  def choose_smart(history)
-    return choose_random if history.total_moves_count < 2
+  def choose_smart
+    return choose_random if moves_history.total_moves_count < 2
 
-    dist = history.human_moves_count
+    dist = moves_history.human_moves_count
     target = dist.select { |_, v| v == dist.values.max }.keys.sample
 
-    self.move = Move.new(Move::LOSS_CONDITIONS[target].sample)
+    choice = Move::LOSS_CONDITIONS[target].sample
+    self.move = Move.new(choice)
+  end
+
+  def choose
+    case name
+    when 'R2D2' then choose_smart
+    when 'Hal' then choose_weighted('rock' => 0.3, 'lizard' => 0.7)
+    when 'Chappie' then choose_random
+    when 'Sonny' then choose_weighted('rock' => 1)
+    when 'Number5' then choose_weighted('rock' => 0.05,
+                                        'lizard' => 0.05,
+                                        'scissors' => 0.7,
+                                        'paper' => 0.1,
+                                        'spock' => 0.1)
+    end
   end
 end
 
@@ -163,7 +199,8 @@ class RPSGame
 
   def players_choose
     human.choose
-    computer.choose_smart(history)
+    computer.moves_history = history
+    computer.choose
   end
 
   def display_moves
