@@ -45,7 +45,7 @@ class Human < Player
     ans = ''
     loop do
       puts "Hello! What's your name?"
-      ans = gets.chomp
+      ans = gets.chomp.strip
       break unless ans.empty?
       puts "Sorry, must enter a value."
     end
@@ -57,8 +57,8 @@ class Human < Player
     loop do
       puts ' '
       puts '--> Please choose rock, paper, scissors, lizard, or spock:'
-      choice = gets.chomp
-      break if Move::VALUES.include? choice.downcase
+      choice = gets.chomp.downcase
+      break if Move::VALUES.include? choice
       puts 'Sorry, invalid choice. Please try again!'
     end
     self.move = Move.new(choice)
@@ -75,19 +75,21 @@ class Computer < Player
   def cumulative_dist(sorted_array)
     return sorted_array if sorted_array.length == 1
 
-    cd = [sorted_array[0]]
-    1.upto(sorted_array.length - 1) { |x| cd << sorted_array[x] + cd[x - 1] }
+    cumul_dist = [sorted_array[0]]
+    1.upto(sorted_array.length - 1) do |x|
+      cumul_dist << sorted_array[x] + cumul_dist[x - 1]
+    end
 
-    cd
+    cumul_dist
   end
 
   def choose_weighted(distribution = {})
-    cd = cumulative_dist(distribution.values.sort)
+    cumul_dist = cumulative_dist(distribution.values.sort)
     distribution = distribution.sort_by { |_, v| v }
     sorted_options = distribution.each_with_object([]) { |x, a| a << x[0] }
 
     r = rand
-    choice = sorted_options[cd.find_index { |x| r < x }]
+    choice = sorted_options[cumul_dist.find_index { |x| r < x }]
     self.move = Move.new(choice)
   end
 
@@ -165,12 +167,12 @@ class Score
     @score.each { |k, v| puts "#{k} = #{v}" }
   end
 
-  def return_all_points
+  def return_points_all
     @score.values
   end
 
-  def return_points(player)
-    @score[player]
+  def return_points_player(player_name)
+    @score[player_name]
   end
 end
 
@@ -178,7 +180,7 @@ end
 class RPSGame
   attr_accessor :human, :computer, :score, :history
 
-  POINTS = 3
+  WINING_POINTS = 3
 
   def initialize
     @human = Human.new
@@ -232,7 +234,7 @@ class RPSGame
   end
 
   def display_match_winner
-    if score.return_points(human.name) == POINTS
+    if score.return_points_player(human.name) == WINING_POINTS
       puts "#{human.name} won the match!"
     else
       puts "#{computer.name} won the match!"
@@ -247,11 +249,11 @@ class RPSGame
     ans = ''
     loop do
       puts 'Do you want to play again? (y/n)'
-      ans = gets.chomp
-      break if %w(yes no y n).include? ans.downcase
+      ans = gets.chomp.downcase
+      break if %w(yes no y n).include? ans
       puts "Sorry, must be y or n."
     end
-    %w(yes y).include? ans.downcase
+    %w(yes y).include? ans
   end
 
   def play
@@ -266,7 +268,7 @@ class RPSGame
         history.add_moves
         change_total_score
         score.display_players_and_points
-        break if score.return_all_points.include?(POINTS)
+        break if score.return_points_all.include?(WINING_POINTS)
       end
 
       display_match_winner
