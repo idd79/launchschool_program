@@ -180,7 +180,7 @@ end
 class RPSGame
   attr_accessor :human, :computer, :score, :history
 
-  WINING_POINTS = 3
+  WINNING_POINTS = 3
 
   def initialize
     @human = Human.new
@@ -234,7 +234,7 @@ class RPSGame
   end
 
   def display_match_winner
-    if score.return_points_player(human.name) == WINING_POINTS
+    if score.return_points_player(human.name) == WINNING_POINTS
       puts "#{human.name} won the match!"
     else
       puts "#{computer.name} won the match!"
@@ -268,7 +268,7 @@ class RPSGame
         history.add_moves
         change_total_score
         score.display_players_and_points
-        break if score.return_points_all.include?(WINING_POINTS)
+        break if score.return_points_all.include?(WINNING_POINTS)
       end
 
       display_match_winner
