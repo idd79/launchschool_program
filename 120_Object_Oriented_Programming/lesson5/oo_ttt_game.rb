@@ -172,6 +172,17 @@ class TTTGame
     @current_marker = human.first_to_move ? human.marker : computer.marker
   end
 
+  def play
+    display_start_playing_message
+    loop do
+      play_rounds
+      display_match_winner
+      play_again? ? play_again : break
+    end
+
+    display_goodbye_message
+  end
+
   private
 
   def add_point(player)
@@ -329,8 +340,6 @@ class TTTGame
     puts 'Next round...'
   end
 
-  public
-
   def display_welcome_message
     clear_screen
     puts 'Welcome to Tic Tac Toe!'
@@ -376,17 +385,6 @@ class TTTGame
       score_points.include?(WINNING_POINTS) ? break : display_result
       play_next_round
     end
-  end
-
-  def play
-    display_start_playing_message
-    loop do
-      play_rounds
-      display_match_winner
-      play_again? ? play_again : break
-    end
-
-    display_goodbye_message
   end
 end
 
