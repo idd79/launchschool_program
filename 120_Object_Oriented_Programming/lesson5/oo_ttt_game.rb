@@ -51,20 +51,20 @@ class Board
     nil
   end
 
-  # returns a hash of almost winning markers and square numbers
-  def almost_winning_markers
-    winning_ops = {}
+  # returns an array of almost winning square numbers for player_marker
+  def almost_winning_options(player_marker)
+    winning_ops = []
     WINNING_LINES.each do |line|
-      squares = @squares.select { |k, _| line.include? k }
-      markers = squares.values.map(&:marker)
+      markers = @squares.values_at(*line).map(&:marker)
 
-      next unless markers.uniq.size == 2 &&
+      next unless markers.count(player_marker) == 2 &&
                   markers.count(Square::INITIAL_MARKER) == 1
 
-      marker = markers.uniq.select { |m| m != Square::INITIAL_MARKER }.first
-      square = squares.select { |_, v| v.marker == Square::INITIAL_MARKER }
-      sq_number = square.keys.first
-      winning_ops[sq_number] = marker
+      empty_square = @squares.select do |k, v|
+        line.include?(k) && v.marker == Square::INITIAL_MARKER
+      end
+
+      winning_ops << empty_square.keys.first
     end
 
     winning_ops
@@ -161,32 +161,32 @@ end
 class TTTGame
   WINNING_POINTS = 3
 
-  attr_reader :board, :human, :computer, :score
+  attr_reader :board, :human, :computer, :scores
 
   def initialize
     display_welcome_message
     @board = Board.new
     @human = Human.new
     @computer = Computer.new(human.marker)
-    @score = { human.name => 0, computer.name => 0 }
+    @scores = { human.name => 0, computer.name => 0 }
     @current_marker = human.first_to_move ? human.marker : computer.marker
   end
 
   private
 
   def add_point(player)
-    @score[player.name] += 1
+    @scores[player.name] += 1
   end
 
   def display_score
     puts ''
     puts '--> The score is:'
-    @score.each { |k, v| puts "#{k} = #{v}" }
+    @scores.each { |k, v| puts "#{k} = #{v}" }
     puts ''
   end
 
   def score_points
-    score.values
+    scores.values
   end
 
   def change_score_and_clear_screen
@@ -199,7 +199,7 @@ class TTTGame
   end
 
   def reset_score_and_board
-    @score = { human.name => 0, computer.name => 0 }
+    @scores = { human.name => 0, computer.name => 0 }
     reset_board
   end
 
@@ -241,19 +241,11 @@ class TTTGame
   end
 
   def computer_winning_options
-    computer_options = board.almost_winning_markers.select do |_, v|
-      v == computer.marker
-    end
-
-    computer_options.keys
+    board.almost_winning_options(computer.marker)
   end
 
   def human_winning_options
-    human_options = board.almost_winning_markers.select do |_, v|
-      v == human.marker
-    end
-
-    human_options.keys
+    board.almost_winning_options(human.marker)
   end
 
   def computer_moves
@@ -301,7 +293,7 @@ class TTTGame
     board.draw
     display_score
 
-    winner_marker = score.select { |_, v| v == WINNING_POINTS }.keys
+    winner_marker = scores.select { |_, v| v == WINNING_POINTS }.keys
 
     case winner_marker.first
     when human.name then puts "Congratulations, you have won the match!"
@@ -371,28 +363,32 @@ class TTTGame
     display_board if human_turn?
   end
 
-  def play
+  def play_rounds
     loop do
+      display_score_and_board
       loop do
-        display_score_and_board
-        loop do
-          current_player_moves
-          break if board.someone_won? || board.full?
-          display_board if human_turn?
-        end
-
-        change_score_and_clear_screen
-        score_points.include?(WINNING_POINTS) ? break : display_result
-        play_next_round
+        current_player_moves
+        break if board.someone_won? || board.full?
+        display_board if human_turn?
       end
 
+      change_score_and_clear_screen
+      score_points.include?(WINNING_POINTS) ? break : display_result
+      play_next_round
+    end
+  end
+
+  def play
+    display_start_playing_message
+    loop do
+      play_rounds
       display_match_winner
       play_again? ? play_again : break
     end
+
+    display_goodbye_message
   end
 end
 
 game = TTTGame.new
-game.display_start_playing_message
 game.play
-game.display_goodbye_message
