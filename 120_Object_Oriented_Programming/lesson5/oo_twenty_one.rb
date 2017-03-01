@@ -1,5 +1,91 @@
 # OO Twenty One Game
 
+module Displayable
+  def clear_screen
+    system('clear') || system('cls')
+  end
+
+  def prompt(message)
+    puts "=> #{message}"
+  end
+
+  def print_cards(hand)
+    last_item = hand.cards.last
+    hand.cards[0, hand.cards.length - 1].join(', ') + ' and ' + last_item.to_s
+  end
+
+  def display_cards(participant)
+    prompt "#{participant.name} has: #{print_cards(participant.hand)}. " \
+           "Total: #{participant.hand_total}."
+  end
+
+  def display_cards_start
+    prompt "#{dealer.name} has: #{dealer.hand[0]} and unknown card."
+    display_cards(player)
+  end
+
+  def display_players_turn_message
+    puts ''
+    prompt("Player's turn...")
+  end
+
+  def display_welcome_message
+    clear_screen
+    puts 'Welcome to Twenty One!'
+    puts ''
+  end
+
+  def display_lets_play_message
+    puts ''
+    puts "Hi #{player.name}! Let's play..."
+    puts ''
+    sleep(2)
+    clear_screen
+  end
+
+  def display_dealers_turn_message
+    puts ''
+    prompt "Dealer's turn..."
+    sleep(2)
+  end
+
+  def display_winner_and_add_point
+    puts ''
+    sleep(2)
+
+    if player_won?
+      scores.add_point(player)
+      prompt "Player has won!"
+    elsif dealer_won?
+      scores.add_point(dealer)
+      prompt "Dealer has won!"
+    else
+      prompt "It's a tie!"
+    end
+  end
+
+  def display_next_round_message
+    puts ''
+    puts "Let's play next round...(Press Enter to continue)"
+    gets.chomp
+    clear_screen
+  end
+
+  def display_match_winner
+    puts ''
+    case match_winner
+    when player.name then puts "Congratulations! You have won the match!"
+    else puts "#{dealer.name} has won the match!"
+    end
+  end
+
+  def display_end_game_message
+    puts ''
+    clear_screen
+    puts "Thanks for playing. Good bye!"
+  end
+end
+
 class Deck
   attr_reader :cards
 
@@ -44,7 +130,9 @@ class Score
   def display_total
     puts ''
     puts "---> The total score is <---"
-    @scores.each { |k, v| puts "++ #{k}: #{v}/#{Game::WINNING_POINTS}" }
+    @scores.each do |name, scr|
+      puts "++ #{name}: #{scr}/#{Game::WINNING_POINTS}"
+    end
     puts ''
   end
 
@@ -134,11 +222,13 @@ class Dealer < Participant
 end
 
 class Game
-  attr_reader :player, :dealer, :deck, :scores
+  include Displayable
 
   WIN_SCORE = 21
   DEALER_FLOOR = 17
   WINNING_POINTS = 2
+
+  attr_reader :player, :dealer, :deck, :scores
 
   def initialize
     display_welcome_message
@@ -162,14 +252,6 @@ class Game
 
   private
 
-  def prompt(message)
-    puts "=> #{message}"
-  end
-
-  def clear_screen
-    system('clear') || system('cls')
-  end
-
   def reset_scores
     @scores = Score.new(player.name, dealer.name)
   end
@@ -180,20 +262,6 @@ class Game
     dealer.hand_reset
   end
 
-  def display_welcome_message
-    clear_screen
-    puts 'Welcome to Twenty One!'
-    puts ''
-  end
-
-  def display_lets_play_message
-    puts ''
-    puts "Hi #{player.name}! Let's play..."
-    puts ''
-    sleep(2)
-    clear_screen
-  end
-
   def assign_cards
     player.hand << deck.deal(2)
     dealer.hand << deck.deal(2)
@@ -201,26 +269,6 @@ class Game
 
   def deal_cards(participant, num)
     participant.hand << deck.deal(num)
-  end
-
-  def print_cards(hand)
-    last_item = hand.cards.last
-    hand.cards[0, hand.cards.length - 1].join(', ') + ' and ' + last_item.to_s
-  end
-
-  def display_cards(participant)
-    prompt "#{participant.name} has: #{print_cards(participant.hand)}. " \
-           "Total: #{participant.hand_total}."
-  end
-
-  def display_cards_start
-    prompt "#{dealer.name} has: #{dealer.hand[0]} and unknown card."
-    display_cards(player)
-  end
-
-  def display_players_turn_message
-    puts ''
-    prompt("Player's turn...")
   end
 
   def players_turn
@@ -236,12 +284,6 @@ class Game
       puts ""
       display_cards(player)
     end
-  end
-
-  def display_dealers_turn_message
-    puts ''
-    prompt "Dealer's turn..."
-    sleep(2)
   end
 
   def dealers_turn
@@ -275,45 +317,9 @@ class Game
     winner.keys.first
   end
 
-  def display_winner_and_add_point
-    puts ''
-    sleep(2)
-
-    if player_won?
-      scores.add_point(player)
-      prompt "Player has won!"
-    elsif dealer_won?
-      scores.add_point(dealer)
-      prompt "Dealer has won!"
-    else
-      prompt "It's a tie!"
-    end
-  end
-
-  def display_next_round_message
-    puts ''
-    puts "Let's play next round...(Press Enter to continue)"
-    gets.chomp
-    clear_screen
-  end
-
-  def display_match_winner
-    puts ''
-    case match_winner
-    when player.name then puts "Congratulations! You have won the match!"
-    else puts "#{dealer.name} has won the match!"
-    end
-  end
-
-  def display_end_game_message
-    puts ''
-    clear_screen
-    puts "Thanks for playing. Good bye!"
-  end
-
   def participants_turn
     players_turn unless player.hit_21?
-    dealers_turn unless player.hit_21? || player.busted?
+    dealers_turn unless player.busted? || dealer.hit_21?
   end
 
   def play_rounds
