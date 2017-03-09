@@ -2022,6 +2022,8 @@ argument.
     p divide(14, 7)  # => 2
 #+END_SRC
 
+- Refer to Ruby documentation for more information about handling exceptions ([here](https://ruby-doc.org/core-2.4.0/doc/syntax/exceptions_rdoc.html))
+
 ** Exercises (More Stuff)
 
 1. Write a program that checks if the sequence of characters "lab"
