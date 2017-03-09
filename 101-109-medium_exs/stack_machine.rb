@@ -15,7 +15,7 @@ def minilang(string)
     end
 
     case item
-    when /^-?\d+?/ then reg = item.to_i
+    when /^-?\d+$/ then reg = item.to_i
     when 'PUSH' then stack << reg
     when 'PRINT' then puts reg
     when 'POP'
