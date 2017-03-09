@@ -10,12 +10,12 @@ class Student
   end
 
   def better_grade_than?(other_student)
-    self.grade > other_student.grade
+    # self.grade > other_student.grade
     # or
-    # grade > other_student.grade
+    grade > other_student.grade
   end
 
-  protected
+  private
   # if we use 'private' instead, we could not access other students' grade even
   # they belonged to the same class
 
