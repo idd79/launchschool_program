@@ -9,13 +9,13 @@ def minilang(string)
   reg = 0
 
   string.split.each do |item|
-    unless OPS.keys.include?(item.to_sym) || item =~ /^\d+$/ ||
+    unless OPS.keys.include?(item.to_sym) || item =~ /^-?\d+$/ ||
            %w(PUSH PRINT POP).include?(item)
       return ERROR
     end
 
     case item
-    when /^\d+?/ then reg = item.to_i
+    when /^-?\d+?/ then reg = item.to_i
     when 'PUSH' then stack << reg
     when 'PRINT' then puts reg
     when 'POP'
@@ -39,4 +39,4 @@ minilang('4 PUSH PUSH 7 MOD MULT PRINT')
 minilang('-3 PUSH 5 SUB PRINT')
 minilang('6 PUSH')
 minilang('3 PUSH 5 MOD PUSH 7 PUSH 4 PUSH 5 MULT PUSH 3 ADD SUB DIV PRINT')
-minilang('5 MULT PRINT')
+p minilang('5 MULT PRINT')
